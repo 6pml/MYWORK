@@ -1,7 +1,8 @@
-export async function onRequest(context) {
-    const { request, env } = context
+addEventListener('fetch', event => {
+    event.respondWith(handleRequest(event.request))
+})
 
-    // CORS — allow the admin page to call this
+async function handleRequest(request) {
     const headers = {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*',
