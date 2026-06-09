@@ -14,12 +14,21 @@ async function handleRequest(request) {
         return new Response(null, { status: 204, headers })
     }
 
-    const key = env.SUPABASE_SERVICE_ROLE_KEY
+    // Debug: check what env looks like
+    const envInfo = {
+        envExists: typeof env !== 'undefined',
+        envType: typeof env,
+        envKeys: typeof env !== 'undefined' ? Object.keys(env) : [],
+        envIsObject: typeof env === 'object'
+    }
+
+    const key = env ? (env.SUPABASE_SERVICE_ROLE_KEY || env['SUPABASE_SERVICE_ROLE_KEY']) : undefined
+
     if (!key) {
-        return new Response(JSON.stringify({ error: 'Server misconfigured: missing key' }), {
-            status: 500,
-            headers
-        })
+        return new Response(JSON.stringify({
+            error: 'Server misconfigured: missing key',
+            envInfo
+        }), { status: 500, headers })
     }
 
     const url = 'https://aojysbbjethuqggvzivi.supabase.co/rest/v1/questionnaire_responses?select=*&order=created_at.desc'
