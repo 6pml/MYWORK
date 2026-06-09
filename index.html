@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>问卷测试页面</title>
+    <title>产品调研问卷</title>
     <style>
         * {
             margin: 0;
@@ -22,102 +22,236 @@
         .card {
             background: white;
             border-radius: 32px;
-            padding: 32px 24px;
-            max-width: 500px;
+            padding: 32px 28px;
+            max-width: 520px;
             width: 100%;
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
             animation: fadeInUp 0.6s ease-out;
+            position: relative;
         }
         @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         h1 {
-            font-size: 28px;
+            font-size: 26px;
             color: #333;
-            margin-bottom: 12px;
             text-align: center;
+            margin-bottom: 6px;
         }
         .subtitle {
             text-align: center;
-            color: #666;
-            margin-bottom: 32px;
-            font-size: 14px;
+            color: #999;
+            font-size: 13px;
+            margin-bottom: 8px;
         }
-        .question {
-            margin-bottom: 24px;
+
+        /* ---- step counter ---- */
+        .step-counter {
+            text-align: center;
+            font-size: 13px;
+            color: #aaa;
+            margin-bottom: 14px;
         }
+        .step-counter span {
+            color: #667eea;
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        /* ---- progress bar ---- */
+        .progress-track {
+            height: 4px;
+            background: #e9ecef;
+            border-radius: 2px;
+            margin-bottom: 28px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 2px;
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* ---- pages container ---- */
+        .pages-container {
+            position: relative;
+            min-height: 320px;
+            perspective: 1000px;
+            transform-style: preserve-3d;
+        }
+        .page {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+                        opacity 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0;
+            transform: translateX(30px);
+            pointer-events: none;
+        }
+        .page.active {
+            opacity: 1;
+            transform: translateX(0) rotateY(0);
+            pointer-events: auto;
+            position: relative;
+        }
+
+        /* setup classes — instant placement, no transition */
+        .page.setup-right {
+            opacity: 0;
+            transform: translateX(36px) rotateY(6deg);
+            transition: none !important;
+        }
+        .page.setup-left {
+            opacity: 0;
+            transform: translateX(-36px) rotateY(-6deg);
+            transition: none !important;
+        }
+
+        /* exit classes — animate out */
+        .page.exit-forward {
+            opacity: 0;
+            transform: translateX(-36px) rotateY(-6deg);
+        }
+        .page.exit-back {
+            opacity: 0;
+            transform: translateX(36px) rotateY(6deg);
+        }
+
+        /* ---- question ---- */
         .question-label {
             font-weight: 600;
-            color: #333;
-            margin-bottom: 12px;
+            color: #222;
+            margin-bottom: 14px;
             display: block;
+            font-size: 16px;
+            line-height: 1.5;
         }
         .option {
             display: flex;
             align-items: center;
-            margin-bottom: 12px;
-            padding: 12px;
+            margin-bottom: 10px;
+            padding: 13px 16px;
             background: #f8f9fa;
-            border-radius: 16px;
+            border-radius: 14px;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+            border: 2px solid transparent;
         }
         .option:hover {
-            background: #e9ecef;
-            transform: scale(1.01);
+            background: #eef0ff;
+            transform: scale(1.015);
+        }
+        .option:active {
+            transform: scale(0.985);
         }
         .option input {
             margin-right: 12px;
-            width: 20px;
-            height: 20px;
+            width: 18px;
+            height: 18px;
             cursor: pointer;
+            accent-color: #667eea;
+            flex-shrink: 0;
         }
         .option label {
             flex: 1;
             cursor: pointer;
             color: #333;
+            font-size: 15px;
         }
-        button {
+        /* selected highlight */
+        .option.picked {
+            background: #ede9fe;
+            border-color: #a78bfa;
+            box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.15);
+            animation: pulse 0.5s ease-out;
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(167, 139, 250, 0.4); }
+            100% { box-shadow: 0 0 0 12px rgba(167, 139, 250, 0); }
+        }
+
+        .text-input {
             width: 100%;
-            padding: 16px;
+            padding: 14px;
+            border: 2px solid #e9ecef;
+            border-radius: 14px;
+            font-size: 15px;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 100px;
+            transition: border-color 0.2s;
+            outline: none;
+            line-height: 1.6;
+        }
+        .text-input:focus {
+            border-color: #667eea;
+        }
+
+        /* ---- nav row ---- */
+        .nav-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            min-height: 44px;
+        }
+        .back-btn {
+            background: none;
+            border: none;
+            color: #999;
+            font-size: 14px;
+            cursor: pointer;
+            padding: 8px 4px;
+            transition: color 0.2s;
+            font-family: inherit;
+        }
+        .back-btn:hover {
+            color: #667eea;
+        }
+        .back-btn.hidden {
+            visibility: hidden;
+        }
+        .submit-btn {
+            padding: 14px 36px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
             border-radius: 40px;
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            margin-top: 16px;
+            font-family: inherit;
         }
-        button:hover {
+        .submit-btn:hover:not(:disabled) {
             transform: translateY(-2px);
             box-shadow: 0 10px 25px -5px rgba(102, 126, 234, 0.4);
         }
-        button:active {
-            transform: translateY(0);
+        .submit-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
+
+        /* ---- toast ---- */
         .toast {
             position: fixed;
             bottom: 30px;
             left: 50%;
             transform: translateX(-50%);
-            background: rgba(0,0,0,0.8);
+            background: rgba(0,0,0,0.85);
             color: white;
-            padding: 12px 24px;
+            padding: 14px 28px;
             border-radius: 40px;
             font-size: 14px;
             opacity: 0;
             transition: opacity 0.3s;
             pointer-events: none;
             z-index: 1000;
+            white-space: nowrap;
         }
         .toast.show {
             opacity: 1;
@@ -126,81 +260,222 @@
 </head>
 <body>
     <div class="card">
-        <h1>✨ 问卷测试</h1>
-        <div class="subtitle">这是一个部署连通性测试页面</div>
-        
-        <div class="question">
-            <div class="question-label">1. 您对我们产品的整体印象如何？</div>
-            <div class="option">
-                <input type="radio" name="q1" value="非常满意" id="q1_a">
-                <label for="q1_a">非常满意</label>
-            </div>
-            <div class="option">
-                <input type="radio" name="q1" value="满意" id="q1_b">
-                <label for="q1_b">满意</label>
-            </div>
-            <div class="option">
-                <input type="radio" name="q1" value="一般" id="q1_c">
-                <label for="q1_c">一般</label>
-            </div>
-            <div class="option">
-                <input type="radio" name="q1" value="不满意" id="q1_d">
-                <label for="q1_d">不满意</label>
-            </div>
-        </div>
-        
-        <div class="question">
-            <div class="question-label">2. 您会推荐给朋友吗？</div>
-            <div class="option">
-                <input type="radio" name="q2" value="一定会" id="q2_a">
-                <label for="q2_a">一定会</label>
-            </div>
-            <div class="option">
-                <input type="radio" name="q2" value="可能会" id="q2_b">
-                <label for="q2_b">可能会</label>
-            </div>
-            <div class="option">
-                <input type="radio" name="q2" value="不确定" id="q2_c">
-                <label for="q2_c">不确定</label>
-            </div>
-        </div>
-        
-        <button onclick="submitTest()">📮 提交测试</button>
-    </div>
-    
-    <div id="toast" class="toast">✅ 提交成功！数据已记录</div>
+        <h1>产品调研问卷</h1>
+        <p class="subtitle">感谢您抽出宝贵时间，共5道题</p>
 
-    <script>
-        function submitTest() {
-            // 获取选中的值
-            const q1 = document.querySelector('input[name="q1"]:checked');
-            const q2 = document.querySelector('input[name="q2"]:checked');
-            
-            if (!q1 || !q2) {
-                alert('请完整回答所有问题');
-                return;
+        <div class="step-counter">第 <span id="stepNum">1</span> 题 / 共 5 题</div>
+        <div class="progress-track">
+            <div class="progress-fill" id="progressFill" style="width: 20%"></div>
+        </div>
+
+        <div class="pages-container">
+
+            <!-- Q1 -->
+            <div class="page active" data-page="0">
+                <div class="question-label">1. 您对我们产品的整体印象如何？</div>
+                <div class="option" data-radio="q1_a"><input type="radio" name="q1" value="非常满意" id="q1_a"><label for="q1_a">非常满意</label></div>
+                <div class="option" data-radio="q1_b"><input type="radio" name="q1" value="满意" id="q1_b"><label for="q1_b">满意</label></div>
+                <div class="option" data-radio="q1_c"><input type="radio" name="q1" value="一般" id="q1_c"><label for="q1_c">一般</label></div>
+                <div class="option" data-radio="q1_d"><input type="radio" name="q1" value="不满意" id="q1_d"><label for="q1_d">不满意</label></div>
+            </div>
+
+            <!-- Q2 -->
+            <div class="page" data-page="1">
+                <div class="question-label">2. 您会推荐我们的产品给朋友或同事吗？</div>
+                <div class="option" data-radio="q2_a"><input type="radio" name="q2" value="一定会" id="q2_a"><label for="q2_a">一定会</label></div>
+                <div class="option" data-radio="q2_b"><input type="radio" name="q2" value="可能会" id="q2_b"><label for="q2_b">可能会</label></div>
+                <div class="option" data-radio="q2_c"><input type="radio" name="q2" value="不确定" id="q2_c"><label for="q2_c">不确定</label></div>
+                <div class="option" data-radio="q2_d"><input type="radio" name="q2" value="不会" id="q2_d"><label for="q2_d">不会</label></div>
+            </div>
+
+            <!-- Q3 -->
+            <div class="page" data-page="2">
+                <div class="question-label">3. 您最喜欢我们产品的哪个方面？</div>
+                <div class="option" data-radio="q3_a"><input type="radio" name="q3" value="功能丰富实用" id="q3_a"><label for="q3_a">功能丰富实用</label></div>
+                <div class="option" data-radio="q3_b"><input type="radio" name="q3" value="界面设计美观" id="q3_b"><label for="q3_b">界面设计美观</label></div>
+                <div class="option" data-radio="q3_c"><input type="radio" name="q3" value="操作简单易用" id="q3_c"><label for="q3_c">操作简单易用</label></div>
+                <div class="option" data-radio="q3_d"><input type="radio" name="q3" value="性能稳定可靠" id="q3_d"><label for="q3_d">性能稳定可靠</label></div>
+            </div>
+
+            <!-- Q4 -->
+            <div class="page" data-page="3">
+                <div class="question-label">4. 您认为我们最需要改进的地方是？</div>
+                <div class="option" data-radio="q4_a"><input type="radio" name="q4" value="功能还需完善" id="q4_a"><label for="q4_a">功能还需完善</label></div>
+                <div class="option" data-radio="q4_b"><input type="radio" name="q4" value="用户体验有待提升" id="q4_b"><label for="q4_b">用户体验有待提升</label></div>
+                <div class="option" data-radio="q4_c"><input type="radio" name="q4" value="客服响应速度" id="q4_c"><label for="q4_c">客服响应速度</label></div>
+                <div class="option" data-radio="q4_d"><input type="radio" name="q4" value="价格方案更灵活" id="q4_d"><label for="q4_d">价格方案更灵活</label></div>
+            </div>
+
+            <!-- Q5 -->
+            <div class="page" data-page="4">
+                <div class="question-label">5. 您还有什么其他建议或想法吗？<span style="color:#999;font-weight:400;font-size:13px">（选填）</span></div>
+                <textarea class="text-input" name="q5" placeholder="请在此输入您的宝贵建议..."></textarea>
+                <div style="margin-top:16px">
+                    <button class="submit-btn" id="submitBtn" onclick="submitForm()">提交问卷</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="nav-row">
+            <button class="back-btn hidden" id="backBtn" onclick="goBack()">← 上一题</button>
+        </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <script type="module">
+        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
+
+        const SUPABASE_URL = 'https://aojysbbjethuqggvzivi.supabase.co'
+        const SUPABASE_KEY = 'sb_publishable_PV_AjlzHUkQyV3e-YbZHWQ_n87Rmdoi'
+        const supabase = createClient(SUPABASE_URL, SUPABASE_KEY)
+
+        const TOTAL = 5
+        let currentPage = 0
+        let isAnimating = false
+
+        const pages = document.querySelectorAll('.page')
+        const stepNum = document.getElementById('stepNum')
+        const progressFill = document.getElementById('progressFill')
+        const backBtn = document.getElementById('backBtn')
+
+        function updateUI(page) {
+            stepNum.textContent = page + 1
+            progressFill.style.width = ((page + 1) / TOTAL * 100) + '%'
+            if (page === 0) {
+                backBtn.classList.add('hidden')
+            } else {
+                backBtn.classList.remove('hidden')
             }
-            
-            // 构造提交数据
-            const data = {
-                q1: q1.value,
-                q2: q2.value,
-                timestamp: new Date().toISOString(),
-                userAgent: navigator.userAgent
-            };
-            
-            // 显示提交成功的提示（模拟提交，暂不连接真实数据库）
-            console.log('提交的数据：', data);
-            
-            const toast = document.getElementById('toast');
-            toast.classList.add('show');
+        }
+
+        function goToPage(n, direction) {
+            if (isAnimating || n === currentPage || n < 0 || n >= TOTAL) return
+            isAnimating = true
+
+            const current = pages[currentPage]
+            const next = pages[n]
+            const isForward = n > currentPage
+
+            // Place next page off-screen, no animation
+            next.classList.add(isForward ? 'setup-right' : 'setup-left')
+            // Force reflow
+            void next.offsetHeight
+
+            // Trigger entry animation
+            next.classList.remove('setup-right', 'setup-left')
+            next.classList.add('active')
+
+            // Trigger exit animation
+            current.classList.remove('active')
+            current.classList.add(isForward ? 'exit-forward' : 'exit-back')
+
+            currentPage = n
+            updateUI(n)
+
             setTimeout(() => {
-                toast.classList.remove('show');
-            }, 2000);
-            
-            // 可选：清空选中状态（如果需要）
-            // q1.checked = false;
-            // q2.checked = false;
+                current.classList.remove('exit-forward', 'exit-back')
+                isAnimating = false
+            }, 460)
+        }
+
+        window.goBack = function () {
+            if (currentPage > 0) {
+                goToPage(currentPage - 1, 'backward')
+            }
+        }
+
+        // Listen for radio selections → auto-advance
+        document.querySelectorAll('.option').forEach(opt => {
+            opt.addEventListener('click', function (e) {
+                const radio = this.querySelector('input[type="radio"]')
+                if (!radio) return
+
+                // Already selected on this option? re-check anyway
+                radio.checked = true
+
+                // Find parent page
+                const page = this.closest('.page')
+                const pageIdx = parseInt(page.dataset.page)
+
+                // Highlight selected option
+                page.querySelectorAll('.option').forEach(o => o.classList.remove('picked'))
+                this.classList.add('picked')
+
+                // Auto-advance after brief delay (skip for last page)
+                if (pageIdx < TOTAL - 1 && pageIdx === currentPage) {
+                    setTimeout(() => {
+                        goToPage(pageIdx + 1, 'forward')
+                    }, 500)
+                }
+            })
+        })
+
+        // Allow keyboard navigation
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'ArrowRight' || e.key === 'Enter') {
+                if (currentPage < TOTAL - 1 && !isAnimating) {
+                    // Check if current question is answered (radio selected)
+                    const current = pages[currentPage]
+                    const checked = current.querySelector('input[type="radio"]:checked')
+                    if (checked) {
+                        goToPage(currentPage + 1, 'forward')
+                    }
+                }
+            } else if (e.key === 'ArrowLeft') {
+                if (currentPage > 0 && !isAnimating) {
+                    goToPage(currentPage - 1, 'backward')
+                }
+            }
+        })
+
+        // Submit handler
+        window.submitForm = async function () {
+            const btn = document.getElementById('submitBtn')
+            if (btn.disabled) return
+
+            const q1 = document.querySelector('input[name="q1"]:checked')
+            const q2 = document.querySelector('input[name="q2"]:checked')
+            const q3 = document.querySelector('input[name="q3"]:checked')
+            const q4 = document.querySelector('input[name="q4"]:checked')
+            const q5 = document.querySelector('textarea[name="q5"]').value.trim()
+
+            if (!q1 || !q2 || !q3 || !q4) {
+                showToast('请先完成前面4道必答题再提交')
+                return
+            }
+
+            btn.disabled = true
+            btn.textContent = '提交中...'
+
+            const { error } = await supabase
+                .from('questionnaire_responses')
+                .insert({
+                    q1: q1.value,
+                    q2: q2.value,
+                    q3: q3.value,
+                    q4: q4.value,
+                    q5: q5 || null,
+                    user_agent: navigator.userAgent
+                })
+
+            if (error) {
+                showToast('提交失败，请稍后重试')
+                console.error('Supabase error:', error)
+                btn.disabled = false
+                btn.textContent = '提交问卷'
+                return
+            }
+
+            showToast('提交成功！感谢您的参与')
+            btn.textContent = '✓ 已提交'
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast')
+            toast.textContent = msg
+            toast.classList.add('show')
+            setTimeout(() => toast.classList.remove('show'), 2500)
         }
     </script>
 </body>
