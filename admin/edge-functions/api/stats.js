@@ -1,8 +1,4 @@
-addEventListener('fetch', event => {
-    event.respondWith(handleRequest(event.request))
-})
-
-async function handleRequest(request) {
+export default async function onRequest({ request, env }) {
     const headers = {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*',
@@ -14,21 +10,12 @@ async function handleRequest(request) {
         return new Response(null, { status: 204, headers })
     }
 
-    // Debug: check what env looks like
-    const envInfo = {
-        envExists: typeof env !== 'undefined',
-        envType: typeof env,
-        envKeys: typeof env !== 'undefined' ? Object.keys(env) : [],
-        envIsObject: typeof env === 'object'
-    }
-
-    const key = env ? (env.SUPABASE_SERVICE_ROLE_KEY || env['SUPABASE_SERVICE_ROLE_KEY']) : undefined
-
+    const key = env.SUPABASE_SERVICE_ROLE_KEY
     if (!key) {
-        return new Response(JSON.stringify({
-            error: 'Server misconfigured: missing key',
-            envInfo
-        }), { status: 500, headers })
+        return new Response(JSON.stringify({ error: 'Server misconfigured: missing key' }), {
+            status: 500,
+            headers
+        })
     }
 
     const url = 'https://aojysbbjethuqggvzivi.supabase.co/rest/v1/questionnaire_responses?select=*&order=created_at.desc'
