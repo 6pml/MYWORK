@@ -1,0 +1,66 @@
+<h2>系统架构总览</h2>
+<p class="subtitle">H5 独居动物鉴定所 — 整体架构设计</p>
+
+<div class="section">
+  <h3>架构图</h3>
+  <div class="mockup">
+    <div class="mockup-header">系统架构</div>
+    <div class="mockup-body" style="font-family: monospace; font-size: 13px; line-height: 1.8; padding: 20px;">
+<pre style="margin:0; font-size:13px;">
+┌──────────────────────────────────────────────────┐
+│              EdgeOne Pages (CDN)                 │
+│  ┌─────────────────────┐ ┌──────────────────┐   │
+│  │  H5 问卷 (SPA)      │ │  管理看板 (/admin) │   │
+│  │  React + Vite       │ │  React Router     │   │
+│  │  Tailwind + Motion   │ │  Recharts 图表     │   │
+│  └────────┬────────────┘ └────────┬─────────┘   │
+└───────────┼──────────────────────┼──────────────┘
+            │                      │
+            │   @supabase/supabase-js
+            │                      │
+     ┌──────▼──────────────────────▼──────┐
+     │            Supabase                 │
+     │  ┌────────────────────────────┐    │
+     │  │  survey_responses (数据表)   │    │
+     │  │  RLS: anon INSERT,          │    │
+     │  │       admin SELECT (via pw) │    │
+     │  └────────────────────────────┘    │
+     └────────────────────────────────────┘
+</pre>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>用户端页面流程</h3>
+  <div class="mockup">
+    <div class="mockup-header">5 个步骤，纯状态驱动</div>
+    <div class="mockup-body" style="font-family: monospace; font-size: 13px; line-height: 2.0; padding: 20px; text-align: center;">
+      开场页  →  答题页(8题)  →  结果页  →  问卷页  →  完成页
+      <br>
+      <span style="font-size:11px; color: #888;">可返回上一题  可返回修改  可跳过问卷</span>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>关键决策</h3>
+  <table style="width:100%; border-collapse: collapse; font-size: 14px;">
+    <tr style="border-bottom: 1px solid #e5e7eb;">
+      <td style="padding: 10px 12px; color: #666;">分享</td>
+      <td style="padding: 10px 12px;">基础微信分享（标题+描述+缩略图），无需海报</td>
+    </tr>
+    <tr style="border-bottom: 1px solid #e5e7eb;">
+      <td style="padding: 10px 12px; color: #666;">看板认证</td>
+      <td style="padding: 10px 12px;">简单密码验证，非登录系统</td>
+    </tr>
+    <tr style="border-bottom: 1px solid #e5e7eb;">
+      <td style="padding: 10px 12px; color: #666;">数据导出</td>
+      <td style="padding: 10px 12px;">暂不需要，看板图表直连 Supabase</td>
+    </tr>
+    <tr style="border-bottom: 1px solid #e5e7eb;">
+      <td style="padding: 10px 12px; color: #666;">答题交互</td>
+      <td style="padding: 10px 12px;">支持返回上一题修改答案</td>
+    </tr>
+  </table>
+</div>
