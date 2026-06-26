@@ -6,274 +6,1243 @@
 <title>独居动物鉴定所</title>
 <link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; overflow: hidden; }
 
-  html, body {
-    height: 100%;
-    overflow: hidden;
-  }
+body {
+  font-family: 'ZCOOL KuaiLe', 'Comic Sans MS', cursive, sans-serif;
+  background: oklch(17% 0.02 280);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: env(safe-area-inset-top, 40px) 16px env(safe-area-inset-bottom, 40px);
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
 
-  body {
-    font-family: 'ZCOOL KuaiLe', 'Comic Sans MS', cursive, sans-serif;
-    background: #6C5CE7;
-    display: flex;
-    flex-direction: column;
-    padding: env(safe-area-inset-top, 20px) 20px env(safe-area-inset-bottom, 20px);
-    -webkit-tap-highlight-color: transparent;
-    user-select: none;
-  }
+.page {
+  display: none;
+  flex-direction: column;
+  width: 100%;
+  max-width: 430px;
+  height: 100%;
+}
+.page.active { display: flex; }
 
-  /* ===== 顶部区域 ===== */
-  .top-bar {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 8px 4px 0;
-  }
-  .badge {
-    background: #FFD93D;
-    color: #2D1B4E;
-    font-size: 13px;
-    padding: 5px 14px;
-    border-radius: 20px;
-    flex-shrink: 0;
-  }
-  .progress-text {
-    font-size: 12px;
-    color: rgba(255,255,255,0.7);
-  }
+/* ===== Opening Page ===== */
+.opening-wrap {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 24px;
+  overflow: hidden;
+}
+.opening-deco {
+  position: absolute;
+  width: 140px;
+  height: 140px;
+  pointer-events: none;
+  z-index: 0;
+}
+.opening-deco img { width: 100%; height: 100%; object-fit: contain; }
+.opening-deco.tl { top: 8px; left: -12px; animation: floatTL 3s ease-in-out infinite; }
+.opening-deco.br { bottom: 8px; right: -12px; animation: floatBR 3.2s ease-in-out infinite; }
 
-  .q-title {
-    font-size: 24px;
-    color: #fff;
-    padding: 12px 4px 16px;
-    line-height: 1.5;
-    text-shadow: 0 2px 6px rgba(0,0,0,0.18);
-  }
+@keyframes floatTL {
+  0%, 100% { transform: translate(0, 0) rotate(-3deg); }
+  50%      { transform: translate(6px, 8px) rotate(0deg); }
+}
+@keyframes floatBR {
+  0%, 100% { transform: translate(0, 0) rotate(3deg); }
+  50%      { transform: translate(-6px, -8px) rotate(0deg); }
+}
 
-  /* ===== 2x2 选项网格 ===== */
-  .options-grid {
-    flex: 1;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
-    gap: 12px;
-    padding: 0 0 16px;
-  }
+.opening-content { position: relative; z-index: 1; }
+.opening-content h1 {
+  font-size: clamp(28px, 7vw, 36px);
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+  line-height: 1.3;
+}
+.opening-content .sub {
+  font-size: 15px;
+  color: oklch(60% 0.04 65);
+  margin-top: 8px;
+}
+.btn-start {
+  position: relative;
+  z-index: 1;
+  margin-top: 16px;
+  padding: 16px 48px;
+  border-radius: 50px;
+  border: none;
+  background: oklch(78% 0.14 85);
+  color: oklch(20% 0.02 280);
+  font-family: inherit;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  animation: pulse 2s ease-in-out infinite;
+  transition: transform 0.12s cubic-bezier(0.25, 1, 0.5, 1);
+  box-shadow: 0 0 40px rgba(255, 215, 60, 0.2);
+}
+.btn-start:active { transform: scale(0.93); }
+.btn-start:focus-visible { outline: 2px solid #fff; outline-offset: 4px; }
 
-  .option {
-    border-radius: 20px;
-    cursor: pointer;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    padding: 10px 10px 14px;
-    position: relative;
-    overflow: hidden;
-    transition: transform 0.12s ease, box-shadow 0.15s ease;
-    animation: popUp 0.4s ease both;
-  }
-  .option:nth-child(1) { animation-delay: 0.05s; }
-  .option:nth-child(2) { animation-delay: 0.12s; }
-  .option:nth-child(3) { animation-delay: 0.19s; }
-  .option:nth-child(4) { animation-delay: 0.26s; }
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(255, 215, 60, 0.15); }
+  50%      { box-shadow: 0 0 50px rgba(255, 215, 60, 0.35); }
+}
 
-  @keyframes popUp {
-    from { opacity: 0; transform: scale(0.92); }
-    to   { opacity: 1; transform: scale(1); }
-  }
+/* ===== Top Bar ===== */
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 4px 6px;
+  flex-shrink: 0;
+}
+.step-dots { display: flex; gap: 6px; }
+.step-dots span {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: oklch(40% 0.01 280);
+  transition: background 0.3s, box-shadow 0.3s;
+}
+.step-dots span.done   { background: oklch(78% 0.14 85); }
+.step-dots span.active { background: #fff; box-shadow: 0 0 8px rgba(255,255,255,0.5); }
+.counter {
+  font-size: 13px;
+  color: oklch(60% 0.02 280);
+  letter-spacing: 0.5px;
+}
 
-  .option:active {
-    transform: scale(0.94);
-  }
+/* ===== Question Title ===== */
+.q-title {
+  font-size: clamp(21px, 5vw, 25px);
+  padding: 22px 4px 12px;
+  line-height: 1.45;
+  text-wrap: balance;
+  letter-spacing: -0.01em;
+  flex-shrink: 0;
+}
+.q-title small {
+  display: block;
+  font-size: 13px;
+  color: oklch(55% 0.04 65);
+  margin-top: 4px;
+  letter-spacing: 0;
+}
 
-  /* 各选项背景色 */
-  .opt-a { background: #FF6B6B; }
-  .opt-b { background: #48DBFB; }
-  .opt-c { background: #FFD93D; }
-  .opt-d { background: #FF9FF3; }
+/* ===== Option Grid ===== */
+.option-grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  padding: 12px 0 8px;
+  overflow-y: auto;
+  align-content: start;
+}
 
-  /* 选中态 */
-  .option.selected {
-    box-shadow: 0 0 0 4px #fff, 0 8px 30px rgba(0,0,0,0.25);
-    animation: selectBounce 0.35s ease;
-  }
-  @keyframes selectBounce {
-    0%   { transform: scale(1); }
-    30%  { transform: scale(0.93); }
-    60%  { transform: scale(1.04); }
-    100% { transform: scale(1); }
-  }
+.opt {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 10px;
+  border-radius: 18px;
+  cursor: pointer;
+  outline: none;
+  position: relative;
+  background: oklch(22% 0.015 280);
+  border: 2px solid oklch(28% 0.015 280);
+  transition: transform 0.15s cubic-bezier(0.25, 1, 0.5, 1),
+              border-color 0.2s,
+              background 0.2s,
+              box-shadow 0.2s;
+  animation: fadeInUp 0.4s cubic-bezier(0.25, 1, 0.5, 1) both;
+}
+.opt:nth-child(1) { animation-delay: 0.05s; }
+.opt:nth-child(2) { animation-delay: 0.12s; }
+.opt:nth-child(3) { animation-delay: 0.19s; }
+.opt:nth-child(4) { animation-delay: 0.26s; }
+.opt:nth-child(5) { animation-delay: 0.33s; }
 
-  /* 图片区域 */
-  .img-wrap {
-    width: 200px;
-    height: 200px;
-    position: relative;
-    flex-shrink: 0;
-  }
-  .img-wrap img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    position: absolute;
-    top: 0; left: 0;
-    transition: opacity 0.2s ease;
-  }
-  /* 默认：静态图可见，动图隐藏 */
-  .img-static { opacity: 1; }
-  .img-anim   { opacity: 0; }
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
 
-  /* 选中：静态图隐藏，动图出现 */
-  .option.selected .img-static { opacity: 0; }
-  .option.selected .img-anim   { opacity: 1; }
+.opt:focus-visible {
+  outline: 2px solid oklch(78% 0.14 85);
+  outline-offset: 2px;
+}
+.opt:active {
+  transform: scale(0.96);
+  transition: transform 0.08s ease;
+}
 
-  /* 字母标签 */
-  .letter-tag {
-    font-size: 14px;
-    padding: 3px 12px;
-    border-radius: 20px;
-    background: rgba(255,255,255,0.35);
-    color: #fff;
-    flex-shrink: 0;
-  }
-  .option.selected .letter-tag {
-    background: #fff;
-    color: #333;
-  }
+.opt.selected {
+  background: oklch(26% 0.025 280);
+  border-color: oklch(78% 0.14 85);
+  box-shadow: 0 0 0 4px rgba(255, 215, 60, 0.12), 0 0 30px rgba(255, 215, 60, 0.08);
+  animation: fadeInUp 0.3s cubic-bezier(0.25, 1, 0.5, 1) both, floatCard 2.8s ease-in-out infinite;
+}
 
-  /* 选项文字 */
-  .opt-text {
-    font-size: 14px;
-    color: #fff;
-    text-align: center;
-    line-height: 1.4;
-    padding: 0 4px;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.15);
-  }
+@keyframes floatCard {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-5px); }
+}
 
-  /* 底部按钮 */
-  .nav-row {
-    display: flex;
-    gap: 12px;
-    padding: 8px 4px 12px;
-    flex-shrink: 0;
+/* GIF / Preview box */
+.opt .gif-box {
+  width: 100%;
+  aspect-ratio: 1;
+  max-width: 130px;
+  border-radius: 14px;
+  overflow: hidden;
+  position: relative;
+  background: oklch(20% 0.025 280);
+}
+.opt .gif-box img {
+  width: 100%; height: 100%;
+  object-fit: contain;
+  position: absolute; top: 0; left: 0;
+}
+.opt .img-static { opacity: 1; transition: opacity 0.25s cubic-bezier(0.25, 1, 0.5, 1); }
+.opt .img-anim   { opacity: 0; transition: opacity 0.25s cubic-bezier(0.25, 1, 0.5, 1); }
+.opt.selected .img-static { opacity: 0; }
+.opt.selected .img-anim   { opacity: 1; }
+
+/* Option text */
+.opt .opt-label {
+  font-size: 13px;
+  color: oklch(55% 0.04 65);
+  text-align: center;
+  line-height: 1.35;
+  transition: color 0.2s;
+}
+.opt.selected .opt-label {
+  color: oklch(78% 0.14 85);
+  font-weight: bold;
+}
+
+/* Multi-select check indicator */
+.opt .multi-check {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  width: 22px; height: 22px;
+  border-radius: 6px;
+  border: 2px solid oklch(35% 0.02 280);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.2s, background 0.2s;
+  z-index: 2;
+}
+.opt.selected .multi-check {
+  border-color: oklch(78% 0.14 85);
+  background: oklch(78% 0.14 85);
+}
+.multi-check svg {
+  opacity: 0;
+  transform: scale(0.5);
+  transition: opacity 0.2s, transform 0.25s cubic-bezier(0.25, 1, 0.5, 1);
+}
+.opt.selected .multi-check svg {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* E选项 (其他) text input */
+.other-input {
+  display: none;
+  width: 100%;
+  margin-top: 6px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 2px solid oklch(35% 0.02 280);
+  background: oklch(20% 0.02 280);
+  color: #fff;
+  font-family: inherit;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.other-input:focus { border-color: oklch(78% 0.14 85); }
+.opt.selected .other-input { display: block; }
+
+/* Q7 hint */
+.q7-hint {
+  text-align: center;
+  font-size: 13px;
+  color: oklch(55% 0.04 65);
+  padding: 4px 0;
+  flex-shrink: 0;
+}
+
+/* ===== Nav Row ===== */
+.nav-row {
+  display: flex;
+  gap: 12px;
+  padding: 12px 0;
+  flex-shrink: 0;
+}
+.btn {
+  flex: 1;
+  min-height: 50px;
+  border-radius: 16px;
+  border: none;
+  font-family: inherit;
+  font-size: 16px;
+  cursor: pointer;
+  outline: none;
+  transition: transform 0.12s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.2s;
+}
+.btn:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+.btn:active { transform: scale(0.95); }
+.btn-prev { background: oklch(28% 0.015 280); color: oklch(70% 0.02 280); }
+.btn-next { background: oklch(78% 0.14 85); color: oklch(20% 0.02 280); font-weight: bold; }
+.btn-next:disabled { opacity: 0.25; pointer-events: none; }
+
+/* ===== Result Page ===== */
+.result-wrap {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-y: auto;
+  padding: 16px 0;
+  gap: 14px;
+}
+.result-gif {
+  width: 180px;
+  height: 180px;
+  flex-shrink: 0;
+  animation: resultBounce 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+}
+@keyframes resultBounce {
+  0%   { transform: scale(0.3); opacity: 0; }
+  60%  { transform: scale(1.05); }
+  100% { transform: scale(1); opacity: 1; }
+}
+.result-gif img { width: 100%; height: 100%; object-fit: contain; }
+
+.result-title {
+  font-size: clamp(24px, 6vw, 30px);
+  text-align: center;
+  text-wrap: balance;
+}
+.result-subtitle {
+  font-size: 15px;
+  color: oklch(60% 0.04 65);
+  text-align: center;
+}
+.result-score {
+  font-size: 18px;
+  color: oklch(78% 0.14 85);
+}
+
+.result-desc {
+  font-size: 14px;
+  color: oklch(80% 0.02 280);
+  line-height: 1.65;
+  text-align: left;
+  padding: 0 4px;
+  text-wrap: pretty;
+}
+.result-bullets {
+  font-size: 13px;
+  color: oklch(70% 0.02 280);
+  line-height: 1.6;
+  padding: 0 4px;
+  text-align: left;
+  width: 100%;
+}
+.result-bullets li { margin-bottom: 4px; }
+.result-bullets li::marker { color: oklch(78% 0.14 85); }
+.result-suggestions {
+  font-size: 13px;
+  color: oklch(70% 0.02 280);
+  line-height: 1.6;
+  padding: 0 4px;
+  text-align: left;
+  width: 100%;
+  list-style-type: none;
+}
+.result-suggestions li {
+  padding: 8px 12px;
+  margin-bottom: 6px;
+  background: oklch(22% 0.015 280);
+  border-radius: 12px;
+  border: 1px solid oklch(28% 0.015 280);
+}
+.result-suggestions li span { color: oklch(78% 0.14 85); font-weight: bold; margin-right: 4px; }
+
+/* ===== Survey Page ===== */
+.survey-wrap {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  overflow-y: auto;
+  padding: 12px 0;
+}
+.survey-wrap h2 {
+  font-size: clamp(22px, 5vw, 26px);
+  text-align: center;
+  text-wrap: balance;
+}
+.survey-wrap .survey-sub {
+  font-size: 14px;
+  color: oklch(60% 0.04 65);
+  text-align: center;
+}
+.survey-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.survey-field label {
+  font-size: 15px;
+  color: oklch(80% 0.02 280);
+}
+.chip-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.chip {
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: 2px solid oklch(35% 0.02 280);
+  background: oklch(22% 0.015 280);
+  color: oklch(75% 0.02 280);
+  font-family: inherit;
+  font-size: 14px;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s, color 0.2s;
+}
+.chip.selected {
+  border-color: oklch(78% 0.14 85);
+  background: oklch(26% 0.025 280);
+  color: #fff;
+}
+.survey-input {
+  padding: 12px;
+  border-radius: 12px;
+  border: 2px solid oklch(35% 0.02 280);
+  background: oklch(22% 0.015 280);
+  color: #fff;
+  font-family: inherit;
+  font-size: 15px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.survey-input:focus { border-color: oklch(78% 0.14 85); }
+.gender-group {
+  display: flex;
+  gap: 10px;
+}
+.gender-btn {
+  flex: 1;
+  padding: 12px;
+  border-radius: 12px;
+  border: 2px solid oklch(35% 0.02 280);
+  background: oklch(22% 0.015 280);
+  color: oklch(75% 0.02 280);
+  font-family: inherit;
+  font-size: 15px;
+  cursor: pointer;
+  text-align: center;
+  transition: border-color 0.2s, background 0.2s, color 0.2s;
+}
+.gender-btn.selected {
+  border-color: oklch(78% 0.14 85);
+  background: oklch(26% 0.025 280);
+  color: #fff;
+}
+
+/* ===== Thanks Page ===== */
+.thanks-wrap {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  text-align: center;
+}
+.thanks-icon {
+  font-size: 64px;
+  animation: resultBounce 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* ===== Toast ===== */
+.toast {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: oklch(30% 0.03 15);
+  color: #fff;
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-family: inherit;
+  font-size: 14px;
+  z-index: 100;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+
+/* ===== Canvas ===== */
+#particleCanvas {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 50;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .opt, .opening-deco, .btn-start, .result-gif {
+    animation: none !important;
+    transition: none !important;
   }
-  .btn {
-    flex: 1;
-    padding: 15px;
-    border-radius: 16px;
-    border: none;
-    font-family: inherit;
-    font-size: 17px;
-    cursor: pointer;
-    transition: transform 0.12s ease, opacity 0.2s;
-  }
-  .btn:active { transform: scale(0.94); }
-  .btn-prev {
-    background: rgba(255,255,255,0.18);
-    color: #fff;
-  }
-  .btn-next {
-    background: #fff;
-    color: #6C5CE7;
-    font-weight: bold;
-  }
-  .btn-next:disabled {
-    opacity: 0.35;
-    pointer-events: none;
-  }
+}
 </style>
 </head>
 <body>
 
+<!-- Opening Page -->
+<div class="page active" id="page-opening">
+  <div class="opening-wrap">
+    <div class="opening-deco tl"><img src="gif/opening1.gif" alt=""></div>
+    <div class="opening-deco br"><img src="gif/opening2.gif" alt=""></div>
+    <div class="opening-content">
+      <h1>独居动物<br>鉴定所</h1>
+      <p class="sub">3分钟，测测你是哪种"独居神兽"</p>
+    </div>
+    <button class="btn-start" onclick="startQuiz()">🔍 开始鉴定</button>
+  </div>
+</div>
+
+<!-- Question Page -->
+<div class="page" id="page-question">
   <div class="top-bar">
-    <span class="badge">第 2 / 8 题</span>
-    <span class="progress-text">进度 25%</span>
+    <div class="step-dots" id="stepDots"></div>
+    <span class="counter" id="counter"></span>
   </div>
-
-  <div class="q-title">
-    🌡️ 半夜38.5℃，<br>你的求生欲排在第几位？
-  </div>
-
-  <div class="options-grid">
-    <!-- A -->
-    <div class="option opt-a" data-value="A" onclick="selectOpt(this, 'A')">
-      <div class="img-wrap">
-        <img class="img-static" src="gif/preview/Heart characters crying.png" alt="">
-        <img class="img-anim"   src="gif/Heart characters crying.gif" alt="">
-      </div>
-      <span class="letter-tag">A</span>
-      <span class="opt-text">先发朋友圈："感觉要烧傻了"</span>
-    </div>
-
-    <!-- B -->
-    <div class="option opt-b" data-value="B" onclick="selectOpt(this, 'B')">
-      <div class="img-wrap">
-        <img class="img-static" src="gif/preview/Hart express feelings of love.png" alt="">
-        <img class="img-anim"   src="gif/Hart express feelings of love.gif" alt="">
-      </div>
-      <span class="letter-tag">B</span>
-      <span class="opt-text">打开美团买药，凑个满减</span>
-    </div>
-
-    <!-- C -->
-    <div class="option opt-c" data-value="C" onclick="selectOpt(this, 'C')">
-      <div class="img-wrap">
-        <img class="img-static" src="gif/preview/Heart giving flying kiss.png" alt="">
-        <img class="img-anim"   src="gif/Heart giving flying kiss.gif" alt="">
-      </div>
-      <span class="letter-tag">C</span>
-      <span class="opt-text">给闺蜜发消息："来救我"</span>
-    </div>
-
-    <!-- D -->
-    <div class="option opt-d" data-value="D" onclick="selectOpt(this, 'D')">
-      <div class="img-wrap">
-        <img class="img-static" src="gif/preview/Heart giving flying kiss.png" alt="">
-        <img class="img-anim"   src="gif/Heart giving flying kiss.gif" alt="">
-      </div>
-      <span class="letter-tag">D</span>
-      <span class="opt-text">家里有药箱，退烧贴早就备好</span>
-    </div>
-  </div>
-
+  <div class="q-title" id="qTitle"></div>
+  <div class="option-grid" id="optionGrid"></div>
+  <div class="q7-hint" id="q7Hint" style="display:none">可多选，点击多个选项</div>
   <div class="nav-row">
-    <button class="btn btn-prev" onclick="goBack()">← 上一题</button>
-    <button class="btn btn-next" id="nextBtn" disabled onclick="goNext()">下一题 →</button>
+    <button class="btn btn-prev" id="btnPrev" onclick="goPrev()">← 上一题</button>
+    <button class="btn btn-next" id="btnNext" disabled onclick="goNext()">下一题 →</button>
   </div>
+</div>
 
+<!-- Result Page -->
+<div class="page" id="page-result">
+  <div class="top-bar">
+    <div class="step-dots" id="resultDots"></div>
+    <span class="counter">鉴定完成</span>
+  </div>
+  <div class="result-wrap" id="resultContent"></div>
+  <div class="nav-row">
+    <button class="btn btn-prev" onclick="restartQuiz()">🔄 再测一次</button>
+    <button class="btn btn-next" onclick="showSurvey()">📝 填写问卷</button>
+  </div>
+</div>
+
+<!-- Survey Page -->
+<div class="page" id="page-survey">
+  <div class="top-bar">
+    <div class="step-dots" id="surveyDots"></div>
+    <span class="counter">可选·匿名</span>
+  </div>
+  <div class="survey-wrap" id="surveyContent"></div>
+  <div class="nav-row">
+    <button class="btn btn-prev" onclick="skipSurvey()">跳过</button>
+    <button class="btn btn-next" id="btnSubmit" onclick="submitSurvey()">提交</button>
+  </div>
+</div>
+
+<!-- Thanks Page -->
+<div class="page" id="page-thanks">
+  <div class="thanks-wrap">
+    <div class="result-gif"><img src="gif/end.gif" alt=""></div>
+    <h2>感谢你的参与！</h2>
+    <p>你的回答已收录。</p>
+    <button class="btn-start" style="margin-top:12px;animation:none" onclick="restartQuiz()">🔄 再测一次</button>
+  </div>
+</div>
+
+<canvas id="particleCanvas"></canvas>
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
-  let picked = null
+// ===== Supabase Config =====
+const SUPABASE_URL = 'https://aojysbbjethuqggvzivi.supabase.co'
+const SUPABASE_ANON_KEY = 'YOUR_ANON_KEY_HERE'
+let sb = null
+try { sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) } catch(e) { console.warn('Supabase init failed') }
 
-  function selectOpt(el, val) {
-    if (picked === val) return
+// ===== Quiz Data =====
+const quizData = {
+  questions: [
+    {
+      title: '以下哪种场景最符合你的"一人食"日常？',
+      type: 'single',
+      options: [
+        { letter: 'A', text: '精致摆盘，拍照发朋友圈配文"仪式感不能少"', score: 3, gif: 'Q1_A.gif' },
+        { letter: 'B', text: '边吃边刷剧，一顿饭吃两小时', score: 2, gif: 'Q1_B.gif' },
+        { letter: 'C', text: '站在厨房5分钟就吃完了，碗先泡着', score: 4, gif: 'Q1_C.gif' },
+        { letter: 'D', text: '打开外卖APP，翻了20分钟还是点了昨天那家', score: 1, gif: 'Q1_D.gif' }
+      ]
+    },
+    {
+      title: '半夜38.5℃，你的求生欲排在第几位？',
+      type: 'single',
+      options: [
+        { letter: 'A', text: '先发个朋友圈："感觉要烧傻了，有没有人救救我"', score: 1, gif: 'Q2_A.gif' },
+        { letter: 'B', text: '打开美团买药，顺便凑个满减', score: 3, gif: 'Q2_B.gif' },
+        { letter: 'C', text: '给闺蜜/兄弟发消息："如果我明天没回消息，来救我"', score: 2, gif: 'Q2_C.gif' },
+        { letter: 'D', text: '家里有药箱，退烧贴一直在冰箱里等着这一天', score: 4, gif: 'Q2_D.gif' }
+      ]
+    },
+    {
+      title: '周末早上10点醒来，你的第一念头是？',
+      type: 'single',
+      options: [
+        { letter: 'A', text: '"太好了，没有人吵我，继续躺"', score: 4, gif: 'Q3_B.gif' },
+        { letter: 'B', text: '"刷会儿手机，看看今天有没有人约我"', score: 1, gif: 'Q3_A.gif' },
+        { letter: 'C', text: '"今天必须把那部剧追完/那个游戏通关"', score: 2, gif: 'Q3_C.gif' },
+        { letter: 'D', text: '"趁没人打扰，把那个拖了一周的PPT/书看完"', score: 3, gif: 'Q3_D.gif' }
+      ]
+    },
+    {
+      title: '老板/甲方/生活把你整emo了，你的"自救程序"是？',
+      type: 'single',
+      hasOther: true,
+      options: [
+        { letter: 'A', text: '打开和闺蜜/兄弟的对话框，开始疯狂输出', score: 1, gif: 'Q4_A.gif' },
+        { letter: 'B', text: '下单一个平时舍不得买的东西，报复性消费', score: 2, gif: 'Q4_B.gif' },
+        { letter: 'C', text: '戴上耳机出门暴走/去健身房虐自己', score: 3, gif: 'Q4_C.gif' },
+        { letter: 'D', text: '坐在马桶上刷了2小时短视频，然后忘了为什么emo', score: 4, gif: 'Q4_D.gif' },
+        { letter: 'E', text: '其他（请填写）', score: 0, gif: null, isOther: true }
+      ]
+    },
+    {
+      title: '如果有人提出"每周来陪你两小时"，你的反应是？',
+      type: 'single',
+      hasOther: true,
+      options: [
+        { letter: 'A', text: '"千万别来，我的隐私比我的命重要"', score: 4, gif: 'Q5_A.gif' },
+        { letter: 'B', text: '"听起来不错，但你能换个好看点的人来吗？"', score: 2, gif: 'Q5_B.gif' },
+        { letter: 'C', text: '"多少钱？太贵就算了，我自己也能扛"', score: 3, gif: 'Q5_C.gif' },
+        { letter: 'D', text: '"真的可以吗？什么时候来？"', score: 1, gif: 'Q5_D.gif' },
+        { letter: 'E', text: '其他（请填写）', score: 0, gif: null, isOther: true }
+      ]
+    },
+    {
+      title: '你的微信通讯录里，有几个"随时可以打电话过去哭"的人？',
+      type: 'single',
+      options: [
+        { letter: 'A', text: '0个', score: 1, gif: 'Q6_A.gif' },
+        { letter: 'B', text: '1-2个', score: 2, gif: 'Q6_B.gif' },
+        { letter: 'C', text: '3-5个', score: 3, gif: 'Q6_C.gif' },
+        { letter: 'D', text: '5个以上，但我不会打', score: 4, gif: 'Q6_D.gif' }
+      ]
+    },
+    {
+      title: '以下哪件事是你独居时最隐秘的"恐怖片"？',
+      type: 'multi',
+      hasOther: true,
+      options: [
+        { letter: 'A', text: '半夜听到门外有奇怪的声音', score: 1, gif: 'Q7_A.gif' },
+        { letter: 'B', text: '洗澡时滑倒了，手机不在身边', score: 1, gif: 'Q7_B.gif' },
+        { letter: 'C', text: '加班到很晚，回家发现钥匙没带', score: 2, gif: 'Q7_C.gif' },
+        { letter: 'D', text: '其实没什么好怕的，我就是最恐怖的', score: 4, gif: 'Q7_D.gif' },
+        { letter: 'E', text: '其他（请填写）', score: 0, gif: null, isOther: true }
+      ]
+    },
+    {
+      title: '如果独居是一场"真人秀"，你觉得自己现在是？',
+      type: 'single',
+      options: [
+        { letter: 'A', text: '"荒岛求生"模式', score: 1, gif: 'Q8_A.gif' },
+        { letter: 'B', text: '"有点无聊但还能忍"模式', score: 2, gif: 'Q8_B.gif' },
+        { letter: 'C', text: '"岁月静好"模式', score: 3, gif: 'Q8_C.gif' },
+        { letter: 'D', text: '"我就是主角"模式', score: 4, gif: 'Q8_D.gif' }
+      ]
+    }
+  ],
+  results: {
+    A: {
+      emoji: '🦄', title: '独居神兽', subtitle: '你一个人就是一支队伍',
+      gif: 'AAA.gif',
+      desc: '你是独居界的"天花板"。修水管、换灯泡、搞定蟑螂、一个人搬家——没有你搞不定的。你享受独处的自由，也把生活安排得井井有条。',
+      bullets: [
+        '过度警觉：半夜听到异响会立刻清醒',
+        '拒绝帮助：朋友问"需要帮忙吗"，你永远说"不用"',
+        '孤独的后怕：生病时会想"如果更严重一点怎么办"'
+      ],
+      suggestions: [
+        '设置一个"安全网"——把家门钥匙交给一个信得过的人',
+        '练习说"好，那你帮我"——被帮助不会让你变弱',
+        '每个月给自己一天"软肋日"——允许自己什么都不想干'
+      ],
+      note: '你很强大，但偶尔也可以不那么强。'
+    },
+    B: {
+      emoji: '🌊', title: '佛系岛民', subtitle: '独居挺好，但有人来也不错',
+      gif: 'BBB.gif',
+      desc: '你已经过了"独居好不好"的纠结期。你知道如何把日子过舒服，也坦然接受——有些时刻，有个人在场会更好。',
+      bullets: [
+        '每周花在取快递、排队、预约上的时间：约3-5小时',
+        '因为没人提醒而忘记的体检、缴费：一年至少1-2次',
+        '偶尔觉得"要是有人一起吃饭就好了"的频率：每周至少1次'
+      ],
+      suggestions: [
+        '把"代办"外包出去——省下的时间做你喜欢的事',
+        '找一个"吃饭搭子"——不需要是灵魂伴侣，只是一起吃顿饭',
+        '建立你的"生活仪表盘"——把健康、缴费、重要日期放在一个地方'
+      ],
+      note: '你把独居过成了诗，但诗里也可以有标点符号。'
+    },
+    C: {
+      emoji: '📦', title: '薛定谔的独居者', subtitle: '时而享受独处，时而渴望陪伴',
+      gif: 'CCC.gif',
+      desc: '你的独居状态，取决于今天是周几、有没有加班、外卖好不好吃、天气好不好……有时候你爱死一个人的自由，有时候你觉得自己像一座孤岛。你不是奇怪，你是正常。很多独居者都这样。',
+      bullets: [
+        '独居的好处：自由、安静、不用迁就别人',
+        '独居的代价：没人分享、没人分担、没人见证',
+        '你两种都想要，这不是贪心，这是真实。'
+      ],
+      suggestions: [
+        '提前搭建"陪伴备用池"——2-3个可以随时约的人',
+        '给自己设置"独处保护期"——每周选1-2天设为勿扰模式',
+        '用"单次尝试"代替"长期承诺"——不确定要不要做的事，先试一次'
+      ],
+      note: '你不需要二选一。你可以同时拥有独处的自由和陪伴的温暖。'
+    },
+    D: {
+      emoji: '🐧', title: '社交孤儿', subtitle: '你不是一个人，你只是还没找到连接的方式',
+      gif: 'DDD.gif',
+      desc: '测出这个结果，你可能心里咯噔了一下。别担心，这不是什么严重的"诊断"，只是说明：你目前的状态，是独居者中最需要支持的那一类。你不是"有病"，你只是"暂时断了连接"。',
+      bullets: [
+        '刚搬到新城市，还没有建立朋友圈',
+        '经历了失恋、离异，主动或被动地切断了社交',
+        '工作太忙，长期加班，慢慢地朋友都不联系了'
+      ],
+      suggestions: [
+        '从"低压力社交"开始——和楼下便利店老板聊两句，在网上兴趣小组回复一条评论',
+        '先"练习"再"真实"——如果觉得和人社交太累，可以先从付费陪伴开始',
+        '给自己设定"社交小目标"——每周做一件和别人产生联系的事'
+      ],
+      note: '你需要的不是"改变自己"，而是"找到适合自己的连接方式"。'
+    }
+  }
+}
 
-    // 取消之前的选中
-    document.querySelectorAll('.option.selected').forEach(o => o.classList.remove('selected'))
+// ===== State =====
+let currentQ = 0
+let answers = []
+let totalScore = 0
+let resultType = null
+let surveyAge = null
+let surveyCity = ''
+let surveyGender = null
 
-    // 选中当前
+// ===== Particle Canvas =====
+const canvas = document.getElementById('particleCanvas')
+const ctx = canvas.getContext('2d')
+let particles = []
+let animId = null
+let ambientInterval = null
+let meteorInterval = null
+
+function resizeCanvas() {
+  canvas.width = window.innerWidth
+  canvas.height = window.innerHeight
+}
+window.addEventListener('resize', resizeCanvas)
+resizeCanvas()
+
+// ===== Opening Page Ambient Particles =====
+function startAmbientParticles() {
+  if (ambientInterval) return
+  spawnAmbientBatch()
+  ambientInterval = setInterval(spawnAmbientBatch, 400)
+  spawnMeteor()
+  meteorInterval = setInterval(() => {
+    for (let i = 0; i < 20; i++) { setTimeout(() => spawnMeteor(), i * 40) }
+  }, 1000)
+}
+
+function stopAmbientParticles() {
+  if (ambientInterval) { clearInterval(ambientInterval); ambientInterval = null }
+  if (meteorInterval) { clearInterval(meteorInterval); meteorInterval = null }
+  particles = particles.filter(p => !p.ambient)
+}
+
+function spawnAmbientBatch() {
+  const w = canvas.width
+  const h = canvas.height
+  for (let i = 0; i < 3; i++) {
+    particles.push({
+      x: Math.random() * w,
+      y: h + 10,
+      vx: (Math.random() - 0.5) * 0.4,
+      vy: -(0.3 + Math.random() * 0.7),
+      life: 1,
+      decay: 0.003 + Math.random() * 0.005,
+      size: 1.5 + Math.random() * 2.5,
+      color: Math.random() < 0.5 ? 'oklch(78% 0.14 85 / 0.7)' : 'oklch(90% 0.01 100 / 0.5)',
+      ambient: true
+    })
+  }
+  if (!animId) animateParticles()
+}
+
+// ===== Meteor (shooting star) =====
+function drawStar(ctx, x, y, outerR, innerR, points) {
+  ctx.beginPath()
+  for (let i = 0; i < points * 2; i++) {
+    const r = i % 2 === 0 ? outerR : innerR
+    const angle = (Math.PI * i) / points - Math.PI / 2
+    const px = x + Math.cos(angle) * r
+    const py = y + Math.sin(angle) * r
+    if (i === 0) ctx.moveTo(px, py)
+    else ctx.lineTo(px, py)
+  }
+  ctx.closePath()
+  ctx.fill()
+}
+
+function spawnMeteor() {
+  const w = canvas.width
+  const h = canvas.height
+  const startX = w * (0.05 + Math.random() * 0.9)
+  const startY = h * (0.01 + Math.random() * 0.18)
+  const angle = Math.PI * 0.3 + Math.random() * 0.2
+  const speed = 1.2 + Math.random() * 2
+  const vx = -Math.cos(angle) * speed
+  const vy = Math.sin(angle) * speed
+  const headSize = 3 + Math.random() * 5
+  // Head: star shape
+  particles.push({
+    x: startX, y: startY, vx, vy,
+    life: 1, decay: 0.005 + Math.random() * 0.006,
+    size: headSize, innerRatio: 0.4 + Math.random() * 0.2,
+    color: 'oklch(95% 0.02 100 / 0.95)',
+    ambient: true, meteor: true, shape: 'star'
+  })
+  // Tail dots
+  const tailLen = 5 + Math.floor(Math.random() * 6)
+  for (let i = 1; i <= tailLen; i++) {
+    const t = i / tailLen
+    particles.push({
+      x: startX + vx * t * 1.6,
+      y: startY + vy * t * 1.6,
+      vx, vy,
+      life: 1 - t * 0.5,
+      decay: 0.005 + Math.random() * 0.006,
+      size: (headSize * 0.7 - t * headSize * 0.13) + Math.random() * 0.8,
+      color: `oklch(78% 0.14 85 / ${(0.7 - t * 0.6).toFixed(2)})`,
+      ambient: true, meteor: true
+    })
+  }
+  if (!animId) animateParticles()
+}
+
+const palettes = [
+  ['#FF6B6B', '#FF8E8E', '#FFD93D', '#FF6B9D'],
+  ['#4ECDC4', '#6EE7DE', '#45B7D1', '#96E6A1'],
+  ['#A78BFA', '#C4B5FD', '#8B5CF6', '#DDD6FE'],
+  ['#F59E0B', '#FBBF24', '#FCD34D', '#FDE68A']
+]
+
+function burstParticles(x, y) {
+  const palette = palettes[Math.floor(Math.random() * palettes.length)]
+  for (let i = 0; i < 36; i++) {
+    const angle = (Math.PI * 2 * i) / 36 + (Math.random() - 0.5) * 0.3
+    const speed = 2 + Math.random() * 6
+    particles.push({
+      x, y,
+      vx: Math.cos(angle) * speed,
+      vy: Math.sin(angle) * speed,
+      life: 1,
+      decay: 0.015 + Math.random() * 0.025,
+      size: 2 + Math.random() * 4,
+      color: palette[Math.floor(Math.random() * palette.length)]
+    })
+  }
+  if (!animId) animateParticles()
+}
+
+function animateParticles() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height)
+  particles = particles.filter(p => p.life > 0)
+  for (const p of particles) {
+    p.x += p.vx
+    p.y += p.vy
+    if (!p.ambient) p.vy += 0.06
+    p.life -= p.decay
+    ctx.globalAlpha = p.life
+    ctx.fillStyle = p.color
+    if (p.shape === 'star') {
+      drawStar(ctx, p.x, p.y, p.size, p.size * (p.innerRatio || 0.4), 5)
+    } else {
+      ctx.beginPath()
+      ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2)
+      ctx.fill()
+    }
+  }
+  ctx.globalAlpha = 1
+  if (particles.length > 0) {
+    animId = requestAnimationFrame(animateParticles)
+  } else {
+    animId = null
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
+  }
+}
+
+// ===== Page Navigation =====
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'))
+  document.getElementById(id).classList.add('active')
+
+  if (id === 'page-opening') startAmbientParticles()
+  else stopAmbientParticles()
+}
+
+// ===== Start Quiz =====
+function startQuiz() {
+  currentQ = 0
+  answers = new Array(quizData.questions.length).fill(null)
+  totalScore = 0
+  resultType = null
+  renderQuestion()
+  showPage('page-question')
+}
+
+// ===== Render Question =====
+function renderQuestion() {
+  const q = quizData.questions[currentQ]
+  const total = quizData.questions.length
+
+  let dotsHTML = ''
+  for (let i = 0; i < total; i++) {
+    let cls = ''
+    if (answers[i] !== null) cls = 'done'
+    if (i === currentQ) cls = 'active'
+    dotsHTML += `<span class="${cls}"></span>`
+  }
+  document.getElementById('stepDots').innerHTML = dotsHTML
+  document.getElementById('counter').textContent = `第 ${currentQ + 1} 题 / 共 ${total} 题`
+
+  const isMulti = q.type === 'multi'
+  document.getElementById('qTitle').innerHTML = q.title + (isMulti ? '<small>可多选</small>' : '')
+
+  const grid = document.getElementById('optionGrid')
+  grid.className = 'option-grid' + (q.hasOther ? ' has-extra' : '')
+
+  let html = ''
+  q.options.forEach((opt, idx) => {
+    html += `
+    <div class="opt" data-idx="${idx}" data-letter="${opt.letter}" onclick="selectOpt(this, ${idx})" tabindex="0">
+      ${isMulti ? `<span class="multi-check"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="oklch(20% 0.02 280)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>` : ''}
+      ${opt.gif ? `
+      <div class="gif-box">
+        <img class="img-static" src="gif/preview/${opt.gif.replace('.gif','.png')}" alt="">
+        <img class="img-anim" src="gif/${opt.gif}" alt="">
+      </div>` : `<div class="gif-box" style="display:flex;align-items:center;justify-content:center;font-size:36px">✏️</div>`}
+      <div class="opt-label">选项 ${opt.letter} · ${opt.text}</div>
+      ${opt.isOther ? `<input class="other-input" type="text" placeholder="请填写..." onclick="event.stopPropagation()">` : ''}
+    </div>`
+  })
+  grid.innerHTML = html
+
+  document.getElementById('q7Hint').style.display = isMulti ? 'block' : 'none'
+
+  // Restore previous answer
+  const prev = answers[currentQ]
+  if (prev !== null) {
+    if (isMulti && prev.letters) {
+      prev.letters.forEach(l => {
+        const card = grid.querySelector(`[data-letter="${l}"]`)
+        if (card) {
+          card.classList.add('selected')
+          if (l === 'E' && prev.otherText) {
+            const inp = card.querySelector('.other-input')
+            if (inp) inp.value = prev.otherText
+          }
+        }
+      })
+    } else if (!isMulti && prev.letter) {
+      const card = grid.querySelector(`[data-letter="${prev.letter}"]`)
+      if (card) {
+        card.classList.add('selected')
+        if (prev.otherText) {
+          const inp = card.querySelector('.other-input')
+          if (inp) inp.value = prev.otherText
+        }
+      }
+    }
+  }
+
+  updateNavButtons()
+}
+
+// ===== Select Option =====
+function selectOpt(el, idx) {
+  const q = quizData.questions[currentQ]
+  const grid = document.getElementById('optionGrid')
+  const isMulti = q.type === 'multi'
+
+  if (isMulti) {
+    el.classList.toggle('selected')
+    if (el.classList.contains('selected')) {
+      const rect = el.getBoundingClientRect()
+      burstParticles(rect.left + rect.width / 2, rect.top + rect.height / 2)
+    }
+  } else {
+    if (el.classList.contains('selected')) return
+    grid.querySelectorAll('.opt.selected').forEach(c => c.classList.remove('selected'))
     el.classList.add('selected')
-    picked = val
-
-    document.getElementById('nextBtn').disabled = false
+    const rect = el.getBoundingClientRect()
+    burstParticles(rect.left + rect.width / 2, rect.top + rect.height / 2)
   }
 
-  function goNext() {
-    if (!picked) return
-    alert('→ 下一题（演示）\n你选了：' + picked)
-    picked = null
-    document.querySelectorAll('.option.selected').forEach(o => o.classList.remove('selected'))
-    document.getElementById('nextBtn').disabled = true
+  saveCurrentAnswer()
+  updateNavButtons()
+}
+
+function saveCurrentAnswer() {
+  const q = quizData.questions[currentQ]
+  const grid = document.getElementById('optionGrid')
+  const selected = grid.querySelectorAll('.opt.selected')
+
+  if (q.type === 'multi') {
+    const letters = []
+    const scores = []
+    let otherText = ''
+    selected.forEach(c => {
+      const l = c.dataset.letter
+      letters.push(l)
+      const opt = q.options.find(o => o.letter === l)
+      if (opt && !opt.isOther) scores.push(opt.score)
+      if (opt && opt.isOther) {
+        const inp = c.querySelector('.other-input')
+        if (inp) otherText = inp.value
+      }
+    })
+    answers[currentQ] = { letters, scores, otherText }
+  } else {
+    if (selected.length === 0) {
+      answers[currentQ] = null
+      return
+    }
+    const c = selected[0]
+    const l = c.dataset.letter
+    const opt = q.options.find(o => o.letter === l)
+    let otherText = ''
+    if (opt && opt.isOther) {
+      const inp = c.querySelector('.other-input')
+      if (inp) otherText = inp.value
+    }
+    answers[currentQ] = { letter: l, score: opt ? opt.score : 0, otherText }
+  }
+}
+
+function updateNavButtons() {
+  const ans = answers[currentQ]
+  const isMulti = quizData.questions[currentQ].type === 'multi'
+  const hasSelection = isMulti
+    ? (ans !== null && ans.letters && ans.letters.length > 0)
+    : (ans !== null && ans.letter)
+  document.getElementById('btnNext').disabled = !hasSelection
+
+  if (currentQ === quizData.questions.length - 1) {
+    document.getElementById('btnNext').textContent = '看结果 →'
+  } else {
+    document.getElementById('btnNext').textContent = '下一题 →'
+  }
+}
+
+// ===== Navigation =====
+function goPrev() {
+  saveCurrentAnswer()
+  if (currentQ > 0) {
+    currentQ--
+    renderQuestion()
+  } else {
+    showPage('page-opening')
+  }
+}
+
+function goNext() {
+  saveCurrentAnswer()
+  if (currentQ < quizData.questions.length - 1) {
+    currentQ++
+    renderQuestion()
+  } else {
+    calcResult()
+    renderResult()
+    showPage('page-result')
+  }
+}
+
+// ===== Scoring =====
+function calcResult() {
+  totalScore = 0
+  for (const ans of answers) {
+    if (!ans) continue
+    if (ans.scores) {
+      totalScore += ans.scores.reduce((a, b) => a + b, 0)
+    } else if (ans.score) {
+      totalScore += ans.score
+    }
   }
 
-  function goBack() {
-    picked = null
-    document.querySelectorAll('.option.selected').forEach(o => o.classList.remove('selected'))
-    document.getElementById('nextBtn').disabled = true
+  if (totalScore >= 32) resultType = 'A'
+  else if (totalScore >= 24) resultType = 'B'
+  else if (totalScore >= 16) resultType = 'C'
+  else resultType = 'D'
+}
+
+// ===== Render Result =====
+function renderResult() {
+  const r = quizData.results[resultType]
+  document.getElementById('resultContent').innerHTML = `
+    <div class="result-gif"><img src="gif/${r.gif}" alt=""></div>
+    <div class="result-title">${r.emoji} ${r.title}</div>
+    <div class="result-subtitle">${r.subtitle}</div>
+    <div class="result-score">得分：${totalScore} 分（满分 40）</div>
+    <div class="result-desc">${r.desc}</div>
+    <div style="font-size:14px;color:oklch(78% 0.14 85);padding:0 4px;width:100%">隐藏耗损：</div>
+    <ul class="result-bullets">${r.bullets.map(b => `<li>${b}</li>`).join('')}</ul>
+    <div style="font-size:14px;color:oklch(78% 0.14 85);padding:0 4px;width:100%">给你的3个小建议：</div>
+    <ol class="result-suggestions">${r.suggestions.map((s, i) => `<li><span>${i+1}.</span>${s}</li>`).join('')}</ol>
+    <div style="font-size:13px;color:oklch(60% 0.04 65);text-align:center;padding:6px 0">${r.note}</div>
+  `
+
+  let dotsHTML = ''
+  for (let i = 0; i < quizData.questions.length; i++) dotsHTML += '<span class="done"></span>'
+  document.getElementById('resultDots').innerHTML = dotsHTML
+}
+
+function restartQuiz() {
+  currentQ = 0
+  answers = new Array(quizData.questions.length).fill(null)
+  totalScore = 0
+  resultType = null
+  surveyAge = null
+  surveyCity = ''
+  surveyGender = null
+  document.getElementById('btnNext').textContent = '下一题 →'
+  showPage('page-opening')
+}
+
+// ===== Survey =====
+function showSurvey() {
+  let dotsHTML = ''
+  for (let i = 0; i < 8; i++) dotsHTML += '<span class="done"></span>'
+  document.getElementById('surveyDots').innerHTML = dotsHTML
+
+  document.getElementById('surveyContent').innerHTML = `
+    <h2>感谢你完成测试！</h2>
+    <p class="survey-sub">我们正在研究独居人群的生活状态，你的回答会帮助我们更好地理解这个群体。<br>（全部选填，匿名）</p>
+    <div class="survey-field">
+      <label>你的年龄</label>
+      <div class="chip-group" id="ageGroup">
+        ${['25-30','31-35','36-40','41-45','46-50','50+'].map(a => `<span class="chip" data-val="${a}" onclick="selectChip(this,'age')">${a}</span>`).join('')}
+      </div>
+    </div>
+    <div class="survey-field">
+      <label>你的城市</label>
+      <input class="survey-input" type="text" id="cityInput" placeholder="如：北京" value="${escapeHtml(surveyCity)}" oninput="surveyCity=this.value">
+    </div>
+    <div class="survey-field">
+      <label>你是男生还是女生</label>
+      <div class="gender-group" id="genderGroup">
+        <span class="gender-btn" data-val="男" onclick="selectGender(this)">🙋‍♂️ 男生</span>
+        <span class="gender-btn" data-val="女" onclick="selectGender(this)">🙋‍♀️ 女生</span>
+      </div>
+    </div>
+  `
+  showPage('page-survey')
+}
+
+function escapeHtml(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;') }
+
+function selectChip(el) {
+  el.parentElement.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'))
+  el.classList.add('selected')
+  surveyAge = el.dataset.val
+}
+
+function selectGender(el) {
+  document.querySelectorAll('.gender-btn').forEach(b => b.classList.remove('selected'))
+  el.classList.add('selected')
+  surveyGender = el.dataset.val
+}
+
+function skipSurvey() { showPage('page-result') }
+
+async function submitSurvey() {
+  const btn = document.getElementById('btnSubmit')
+  btn.disabled = true
+  btn.textContent = '提交中...'
+
+  const payload = {
+    answers: answers,
+    total_score: totalScore,
+    result_type: resultType,
+    result_title: quizData.results[resultType].title,
+    age: surveyAge || null,
+    city: surveyCity || null,
+    gender: surveyGender || null,
+    created_at: new Date().toISOString()
   }
+
+  let submitted = false
+  if (sb) {
+    try {
+      const { error } = await sb.from('questionnaire_responses').insert(payload)
+      if (error) throw error
+      submitted = true
+    } catch(e) {
+      console.error('Supabase submit error:', e)
+    }
+  }
+
+  if (!submitted) {
+    try {
+      const existing = JSON.parse(localStorage.getItem('survey_responses') || '[]')
+      existing.push(payload)
+      localStorage.setItem('survey_responses', JSON.stringify(existing))
+    } catch(e) {}
+  }
+
+  showPage('page-thanks')
+  btn.disabled = false
+  btn.textContent = '提交'
+}
+
+// ===== Init =====
+showPage('page-opening')
 </script>
 </body>
 </html>

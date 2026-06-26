@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>独居动物鉴定所</title>
+<link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; overflow: hidden; }
+
+  body {
+    font-family: 'ZCOOL KuaiLe', 'Comic Sans MS', cursive, sans-serif;
+    background: oklch(17% 0.02 280);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    padding: env(safe-area-inset-top, 12px) 16px env(safe-area-inset-bottom, 12px);
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+  }
+
+  /* ---- top ---- */
+  .top-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px 4px 0;
+  }
+  .step-dots {
+    display: flex;
+    gap: 6px;
+  }
+  .step-dots span {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: oklch(40% 0.01 280);
+    transition: background 0.3s;
+  }
+  .step-dots span.done   { background: oklch(78% 0.14 85); }
+  .step-dots span.active { background: #fff; box-shadow: 0 0 8px rgba(255,255,255,0.5); }
+
+  .top-bar .counter {
+    font-size: 13px;
+    color: oklch(60% 0.02 280);
+    letter-spacing: 0.5px;
+  }
+
+  /* ---- title ---- */
+  .q-title {
+    font-size: clamp(22px, 5vw, 26px);
+    padding: 20px 4px 10px;
+    line-height: 1.45;
+    text-wrap: balance;
+    letter-spacing: -0.01em;
+  }
+  .q-title small {
+    display: block;
+    font-size: 13px;
+    color: oklch(55% 0.04 65);
+    margin-top: 4px;
+    letter-spacing: 0;
+  }
+
+  /* ---- card deck (single column) ---- */
+  .card-deck {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 8px 0 4px;
+    overflow-y: auto;
+  }
+
+  .card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px;
+    border-radius: 18px;
+    cursor: pointer;
+    outline: none;
+    position: relative;
+    min-height: 70px;
+    background: oklch(22% 0.015 280);
+    border: 2px solid oklch(28% 0.015 280);
+    transition: transform 0.15s cubic-bezier(0.25, 1, 0.5, 1),
+                border-color 0.2s,
+                background 0.2s,
+                box-shadow 0.2s;
+    animation: fadeIn 0.4s cubic-bezier(0.25, 1, 0.5, 1) both;
+  }
+  .card:nth-child(1) { animation-delay: 0.05s; }
+  .card:nth-child(2) { animation-delay: 0.12s; }
+  .card:nth-child(3) { animation-delay: 0.19s; }
+  .card:nth-child(4) { animation-delay: 0.26s; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .card:focus-visible {
+    outline: 2px solid oklch(78% 0.14 85);
+    outline-offset: 2px;
+  }
+  .card:active {
+    transform: scale(0.97);
+    transition: transform 0.08s ease;
+  }
+
+  /* ---- card selected ---- */
+  .card.selected {
+    background: oklch(26% 0.025 280);
+    border-color: oklch(78% 0.14 85);
+    box-shadow: 0 0 0 4px rgba(255, 215, 60, 0.12), 0 0 30px rgba(255, 215, 60, 0.08);
+  }
+
+  /* ---- card left accent dot ---- */
+  .card .accent-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    background: oklch(35% 0.03 280);
+    transition: background 0.25s, box-shadow 0.25s, transform 0.25s;
+  }
+  .card.selected .accent-dot {
+    background: oklch(78% 0.14 85);
+    box-shadow: 0 0 10px oklch(78% 0.14 85 / 0.6);
+    transform: scale(1.3);
+  }
+
+  /* ---- GIF ---- */
+  .card .gif-box {
+    width: 64px; height: 64px;
+    flex-shrink: 0;
+    border-radius: 14px;
+    overflow: hidden;
+    position: relative;
+    background: oklch(20% 0.025 280);
+  }
+  .card .gif-box img {
+    width: 100%; height: 100%;
+    object-fit: contain;
+    position: absolute; top: 0; left: 0;
+    transition: opacity 0.25s cubic-bezier(0.25, 1, 0.5, 1);
+  }
+  .card .img-static { opacity: 1; }
+  .card .img-anim   { opacity: 0; }
+  .card.selected .img-static { opacity: 0; }
+  .card.selected .img-anim   { opacity: 1; }
+
+  /* ---- text ---- */
+  .card .card-body {
+    flex: 1;
+    min-width: 0;
+  }
+  .card .card-letter {
+    font-size: 13px;
+    color: oklch(55% 0.04 65);
+    margin-bottom: 2px;
+  }
+  .card.selected .card-letter {
+    color: oklch(78% 0.14 85);
+    font-weight: bold;
+  }
+  .card .card-text {
+    font-size: 15px;
+    color: oklch(90% 0.01 280);
+    line-height: 1.4;
+    text-wrap: balance;
+  }
+
+  /* ---- select check ---- */
+  .card .check {
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    border: 2px solid oklch(35% 0.02 280);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.25s, background 0.25s;
+  }
+  .card.selected .check {
+    border-color: oklch(78% 0.14 85);
+    background: oklch(78% 0.14 85);
+  }
+  .card .check svg {
+    opacity: 0;
+    transform: scale(0.5);
+    transition: opacity 0.2s, transform 0.25s cubic-bezier(0.25, 1, 0.5, 1);
+  }
+  .card.selected .check svg {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  /* ---- footer ---- */
+  .nav-row {
+    display: flex;
+    gap: 12px;
+    padding: 8px 0 4px;
+    flex-shrink: 0;
+  }
+  .btn {
+    flex: 1;
+    min-height: 50px;
+    border-radius: 16px;
+    border: none;
+    font-family: inherit;
+    font-size: 16px;
+    cursor: pointer;
+    outline: none;
+    transition: transform 0.12s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.2s;
+  }
+  .btn:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+  .btn:active { transform: scale(0.95); }
+
+  .btn-prev {
+    background: oklch(28% 0.015 280);
+    color: oklch(70% 0.02 280);
+  }
+  .btn-next {
+    background: oklch(78% 0.14 85);
+    color: oklch(20% 0.02 280);
+    font-weight: bold;
+  }
+  .btn-next:disabled {
+    opacity: 0.25;
+    pointer-events: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .card, .card .img-wrap img, .card .check svg {
+      animation: none !important;
+      transition: none !important;
+    }
+  }
+</style>
+</head>
+<body>
+
+  <div class="top-bar">
+    <div class="step-dots">
+      <span class="done"></span>
+      <span class="active"></span>
+      <span></span><span></span><span></span><span></span><span></span><span></span>
+    </div>
+    <span class="counter">第 2 题 / 共 8 题</span>
+  </div>
+
+  <div class="q-title">
+    半夜 38.5℃
+    <small>你的求生欲排在第几位？</small>
+  </div>
+
+  <div class="card-deck" id="deck">
+    <!-- A -->
+    <div class="card" data-value="A" onclick="selectOpt(this,'A')" tabindex="0">
+      <span class="accent-dot"></span>
+      <div class="gif-box">
+        <img class="img-static" src="gif/preview/Heart characters crying.png" alt="">
+        <img class="img-anim"   src="gif/Heart characters crying.gif" alt="">
+      </div>
+      <div class="card-body">
+        <div class="card-letter">选项 A</div>
+        <div class="card-text">先发个朋友圈："感觉要烧傻了，有没有人救救我"</div>
+      </div>
+      <span class="check">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="oklch(20% 0.02 280)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </span>
+    </div>
+
+    <!-- B -->
+    <div class="card" data-value="B" onclick="selectOpt(this,'B')" tabindex="0">
+      <span class="accent-dot"></span>
+      <div class="gif-box">
+        <img class="img-static" src="gif/preview/Hart express feelings of love.png" alt="">
+        <img class="img-anim"   src="gif/Hart express feelings of love.gif" alt="">
+      </div>
+      <div class="card-body">
+        <div class="card-letter">选项 B</div>
+        <div class="card-text">打开美团买药，顺便凑个满减</div>
+      </div>
+      <span class="check">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="oklch(20% 0.02 280)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </span>
+    </div>
+
+    <!-- C -->
+    <div class="card" data-value="C" onclick="selectOpt(this,'C')" tabindex="0">
+      <span class="accent-dot"></span>
+      <div class="gif-box">
+        <img class="img-static" src="gif/preview/Heart giving flying kiss.png" alt="">
+        <img class="img-anim"   src="gif/Heart giving flying kiss.gif" alt="">
+      </div>
+      <div class="card-body">
+        <div class="card-letter">选项 C</div>
+        <div class="card-text">给闺蜜/兄弟发消息："如果我明天没回消息，来救我"</div>
+      </div>
+      <span class="check">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="oklch(20% 0.02 280)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </span>
+    </div>
+
+    <!-- D -->
+    <div class="card" data-value="D" onclick="selectOpt(this,'D')" tabindex="0">
+      <span class="accent-dot"></span>
+      <div class="gif-box">
+        <img class="img-static" src="gif/preview/Heart giving flying kiss.png" alt="">
+        <img class="img-anim"   src="gif/Heart giving flying kiss.gif" alt="">
+      </div>
+      <div class="card-body">
+        <div class="card-letter">选项 D</div>
+        <div class="card-text">家里有药箱，退烧贴一直在冰箱里等着这一天</div>
+      </div>
+      <span class="check">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="oklch(20% 0.02 280)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </span>
+    </div>
+  </div>
+
+  <div class="nav-row">
+    <button class="btn btn-prev" onclick="goBack()">← 上一题</button>
+    <button class="btn btn-next" id="nextBtn" disabled onclick="goNext()">下一题 →</button>
+  </div>
+
+<script>
+  let picked = null
+  function selectOpt(el, val) {
+    if (picked === val) return
+    document.querySelectorAll('.card.selected').forEach(c => c.classList.remove('selected'))
+    el.classList.add('selected')
+    picked = val
+    document.getElementById('nextBtn').disabled = false
+  }
+  function goNext() {
+    if (!picked) return
+    alert('→ 下一题（演示）\n你选了：' + picked)
+    picked = null
+    document.querySelectorAll('.card.selected').forEach(c => c.classList.remove('selected'))
+    document.getElementById('nextBtn').disabled = true
+  }
+  function goBack() {
+    picked = null
+    document.querySelectorAll('.card.selected').forEach(c => c.classList.remove('selected'))
+    document.getElementById('nextBtn').disabled = true
+  }
+</script>
+</body>
+</html>
