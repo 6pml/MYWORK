@@ -849,6 +849,8 @@ const ANIM = {
       ctx.strokeStyle='#e0d8cc'; ctx.lineWidth=1.5; ctx.stroke();
       ctx.beginPath(); ctx.arc(cx,cy-2,w*0.24,0,Math.PI*2); ctx.stroke();
       // garnish swoosh
+
+        _snd("pop",tt-1200);
       ctx.strokeStyle='rgba(124,180,110,0.5)'; ctx.lineWidth=2;
       ctx.beginPath(); ctx.arc(cx+w*0.05,cy-w*0.1,w*0.12,0.8,2.4); ctx.stroke();
       // food items pop in
@@ -886,8 +888,12 @@ const ANIM = {
         // camera lens dot
         ctx.fillStyle='#333'; ctx.beginPath(); ctx.arc(px+pw*0.3,py-ph/2+8,2.5,0,Math.PI*2); ctx.fill();
         // flash burst
+
+        _snd("tap",tt-2500);
         if(tt>2300&&tt<2500){ const fa=(tt<2400?(tt-2300)/100:(2500-tt)/100); ctx.fillStyle=`rgba(255,255,255,${fa*0.9})`; ctx.fillRect(0,0,w,h); }
         // hearts & sparkles after photo
+
+        _snd("success",tt-3400);
         if(tt>2500&&tt<4300){
           for(let i=0;i<8;i++){ const ht=(tt-2500-i*150)/1600; if(ht>0&&ht<1){ const hx=px+Math.sin(ht*5+i*1.3)*18,hy=py-14-ht*60; _drawHeart(ctx,hx,hy,4+Math.random()*3,`rgba(255,120,160,${1-ht})`); }}
           for(let i=0;i<6;i++){ const st2=(tt-2500-i*200)/1200; if(st2>0&&st2<1){ ctx.fillStyle=`rgba(255,215,60,${0.7*(1-st2)})`; ctx.font=`${w*0.05}px sans-serif`; const sx2=px+Math.cos(i*1.1)*20, sy2=py-20-st2*40; ctx.fillText('✨',sx2,sy2); }}
@@ -941,6 +947,8 @@ const ANIM = {
       const sceneColors=['#4a90d9','#e8734a','#7bc67e'];
       ctx.fillStyle=sceneColors[sceneIdx]; _R(ctx,sx-sw/2+3,sy-sh/2+3,sw-6,sh-6,3); ctx.fill();
       // progress bar on screen
+_snd("tap",tt-2200);
+
       const sprog=(tt%1200)/1200;
       ctx.fillStyle='rgba(255,255,255,0.3)'; ctx.fillRect(sx-sw/2+5,sy+sh/2-12,sw-10,3);
       ctx.fillStyle='#ffd73c'; ctx.fillRect(sx-sw/2+5,sy+sh/2-12,(sw-10)*sprog,3);
@@ -952,6 +960,8 @@ const ANIM = {
       ctx.restore();
       // "弹幕" floating across screen
       const danmaku=["哈哈哈🤣","这也太下饭了","再来一碗!","看饿了..."];
+_snd("msg",tt-1500);
+
       if(tt>800){ const di=Math.floor(tt/1500)%4; const dp=(tt%1500)/1500; const dx=sx-sw/2+sw*dp, dy=sy-sh/4+Math.sin(dp*Math.PI)*10; ctx.fillStyle=`rgba(255,255,255,${0.6*(1-Math.abs(dp-0.5)*2)})`; ctx.font=`${w*0.04}px sans-serif`; ctx.fillText(danmaku[di],dx,dy); }
       // clock spinning fast
       const clX=w*0.88,clY=h*0.14,clR=w*0.1;
@@ -964,6 +974,8 @@ const ANIM = {
       ctx.beginPath(); ctx.moveTo(clX,clY); ctx.lineTo(clX+Math.cos(minAng2-Math.PI/2)*clR*0.7,clY+Math.sin(minAng2-Math.PI/2)*clR*0.7); ctx.stroke();
       // "2小时" text appears
       if(tt>3500){ const ta2=(tt-3500)/700; ctx.fillStyle=`rgba(255,200,100,${Math.min(1,ta2)*0.8})`; ctx.font=`bold ${w*0.06}px sans-serif`; ctx.textAlign='center'; ctx.fillText('2小时过去了...',cx,h*0.88); }
+_snd("pop",tt-3200);
+
     }
   },
 
@@ -991,6 +1003,8 @@ const ANIM = {
         const waterLevel=Math.min(sinkH-10,(tt-2000)/700*(sinkH-10));
         ctx.fillStyle='rgba(100,180,220,0.55)'; ctx.fillRect(sinkX-sinkW/2+5,sinkY+sinkH/2-5-waterLevel,sinkW-10,waterLevel);
         // bubbles in sink
+_snd("pop",tt-800);
+
         if(tt>2500){ for(let i=0;i<5;i++){ const bt=(tt-2500+i*250)%1400; const bx2=sinkX+Math.sin(i*2.4)*sinkW*0.3,by2=sinkY+sinkH/2-6-bt*0.02; if(bt<1100){ ctx.fillStyle='rgba(255,255,255,0.55)'; ctx.beginPath(); ctx.arc(bx2,by2,1.5+Math.random()*2.5,0,Math.PI*2); ctx.fill(); }}}
         // soap bubbles
         for(let i=0;i<3;i++){ const sbt=(tt-2800+i*400)%1800; if(sbt<1200){ ctx.fillStyle=`rgba(200,220,255,${0.4*(1-sbt/1200)})`; ctx.beginPath(); ctx.arc(sinkX+Math.sin(i*2)*sinkW*0.2,sinkY-sinkH*0.1-sbt*0.015,4+sbt*0.003,0,Math.PI*2); ctx.fill(); ctx.strokeStyle=`rgba(255,255,255,0.5)`; ctx.lineWidth=0.5; ctx.stroke(); }}
@@ -999,6 +1013,8 @@ const ANIM = {
       ctx.strokeStyle='#aaa'; ctx.lineWidth=3; ctx.lineCap='round';
       ctx.beginPath(); ctx.moveTo(sinkX,sinkY-sinkH/2); ctx.lineTo(sinkX,sinkY-sinkH/2-12); ctx.lineTo(sinkX-sinkW*0.2,sinkY-sinkH/2-12); ctx.stroke();
       // water drip
+_snd("drop",tt-1800);
+
       if(tt>3000&&tt<3800){ const dp=(tt-3000)/800; ctx.fillStyle='rgba(100,180,220,0.6)'; ctx.beginPath(); ctx.arc(sinkX,sinkY-sinkH/2+dp*10,1.5,0,Math.PI*2); ctx.fill(); }
       // character
       let charX=w*0.32,charY=h*0.43;
@@ -1033,6 +1049,8 @@ const ANIM = {
       // "5分钟!" text flash - bigger and bolder
       if(tt>800&&tt<1400){ const alpha=tt<1100?(tt-800)/300:(1400-tt)/300; ctx.fillStyle=`rgba(255,80,50,${alpha*0.9})`; ctx.font=`bold ${w*0.16}px "ZCOOL KuaiLe",sans-serif`; ctx.textAlign='center'; ctx.fillText('5分钟!',w*0.38,charY-w*0.22); }
       // "碗先泡着" text
+_snd("ding",tt-2800);
+
       if(tt>2400&&tt<3700){ const wa=(tt-2400)/400, ws=Math.min(1,wa); ctx.fillStyle=`rgba(150,150,150,${ws*0.7})`; ctx.font=`${w*0.05}px sans-serif`; ctx.textAlign='center'; ctx.fillText('碗先泡着...',w*0.7,sinkY+sinkH/2+12); }
     }
   },
@@ -1097,6 +1115,8 @@ const ANIM = {
         _R(ctx,phX-phW/2+8,cardY0,phW-16,cardH,4); ctx.fill();
         ctx.fillStyle='#e8734a'; ctx.font=`bold ${w*0.07}px sans-serif`; ctx.textAlign='left';
         ctx.fillText('还是昨天那家!',phX-phW/2+16,cardY0+cardH*0.58);
+_snd("pop",tt-3000);
+
         // checkmark bounce
         const cmX=phX+phW/2-24,cmY=cardY0+cardH*0.5;
         ctx.strokeStyle=`rgba(255,215,60,${hAlpha})`; ctx.lineWidth=2.5;
@@ -1105,6 +1125,10 @@ const ANIM = {
         for(let i=0;i<4;i++){ const sp3=(tt-3800-i*150)/500; if(sp3>0&&sp3<1){ ctx.fillStyle=`rgba(255,215,60,${0.8*(1-sp3)})`; ctx.font=`${w*0.04}px sans-serif`; ctx.fillText('✨',cmX+Math.cos(i*1.6)*12,cmY+Math.sin(i*1.6)*12-sp3*10); }}
       }
       // notification badge
+
+        _snd("ding",tt-2200);
+_snd("msg",tt-1000);
+
       const badgeX=phX+phW/2-12,badgeY=phY-phH/2+phH*0.18;
       ctx.fillStyle='#ff3b3b'; ctx.beginPath(); ctx.arc(badgeX,badgeY,7,0,Math.PI*2); ctx.fill();
       ctx.fillStyle='#fff'; ctx.font=`bold ${w*0.04}px sans-serif`; ctx.textAlign='center'; ctx.fillText('3',badgeX,badgeY+1.5);
@@ -1130,8 +1154,12 @@ const ANIM = {
       // heart reactions
       if(tt>1200&&tt<3800){ for(let i=1;i<=4;i++){ const ht=(tt-1200-i*280)/1100; if(ht>0&&ht<1){ ctx.fillStyle=`rgba(255,100,140,${0.9*(1-ht)})`; ctx.font=`${w*0.04}px sans-serif`; ctx.textAlign='left'; ctx.fillText('❤'+Math.floor(Math.random()*3+2),px+pw/2-30,py-ph/2+ph*0.22+i*16); }}}
       // comment bubbles
+_snd("msg",tt-1500);
+
       if(tt>1800&&tt<3600){['多喝热水!','抱抱🫂','马上到!'].forEach((c,i)=>{ const ct2=(tt-1800-i*400)/600; if(ct2>0&&ct2<1.5){ ctx.fillStyle=`rgba(255,255,255,${0.7*(1-Math.abs(ct2-0.5)*2)})`; ctx.font=`${w*0.035}px sans-serif`; ctx.fillText(c,px+pw/2-25,py-ph/2+ph*0.22+ph*0.2+i*14); }})}
       // red alert dot
+_snd("ding",tt-2000);
+
       if(tt>400&&tt<3800){ const rt=(tt-400)/3400; ctx.fillStyle='#ff3b3b'; ctx.beginPath(); ctx.arc(px+pw*0.28,py+ph*0.28,3.5+Math.sin(tt*0.01)*2,0,Math.PI*2); ctx.fill(); }
     }
   },
@@ -1151,6 +1179,8 @@ const ANIM = {
 	          ctx.fillStyle=m.c; ctx.beginPath(); ctx.arc(px-pw/2+18,my+ph*0.05,6,0,Math.PI*2); ctx.fill();
 	          ctx.fillStyle='#333'; ctx.font=`${w*0.04}px sans-serif`; ctx.textAlign='left'; ctx.fillText(m.n,px-pw/2+30,my+ph*0.07);
 	          if(tt>400+i*150){ const pt=Math.min(1,(tt-400-i*150)/200); ctx.fillStyle=`rgba(255,215,60,${0.3+pt*0.5})`; ctx.font=`bold ${w*0.035}px sans-serif`; ctx.textAlign='right'; ctx.fillText('✓加购',px+pw/2-10,my+ph*0.07); }
+_snd("tap",tt-450);
+
 	        });
 	        ctx.fillStyle='#ff3b3b'; ctx.beginPath(); ctx.arc(px+pw*0.3,py-ph/2+ph*0.05,5,0,Math.PI*2); ctx.fill();
 	        ctx.fillStyle='#fff'; ctx.font=`bold ${w*0.035}px sans-serif`; ctx.textAlign='center'; ctx.fillText(Math.min(4,Math.floor(tt/300)),px+pw*0.3,py-ph/2+ph*0.06);
@@ -1192,6 +1222,8 @@ const ANIM = {
 	        }
 	        const statusPulse=Math.sin(pt2*0.003)*0.1+0.9;
 	        ctx.fillStyle=`rgba(255,215,60,${statusPulse})`; ctx.font=`bold ${w*0.09}px sans-serif`; ctx.textAlign='center'; ctx.fillText('配送中',cx,h*0.32);
+_snd("whoosh",tt-1300);
+
 	        const dots=Math.floor(pt2/400)%4; ctx.fillText('.'.repeat(dots),cx+w*0.15,h*0.32);
 	        const progW=w*0.5; const progX=cx-progW/2; const progY=h*0.38;
 	        ctx.fillStyle='rgba(255,255,255,0.2)'; _R(ctx,progX,progY,progW,h*0.015,4); ctx.fill();
@@ -1202,6 +1234,8 @@ const ANIM = {
 	        if(pt2>2000){
 	          const ap=Math.min(1,(pt2-2000)/500);
 	          ctx.fillStyle=`rgba(124,198,110,${ap*0.95})`; ctx.font=`bold ${w*0.10}px sans-serif`; ctx.textAlign='center'; ctx.fillText('📦 已送达!',cx,h*0.50);
+_snd("success",tt-3200);
+
 	          for(let sp=0;sp<6;sp++){ const spa=pt2*0.004+sp*Math.PI/3; const spx=cx+Math.cos(spa)*w*0.2,spy=h*0.48+Math.sin(spa)*h*0.04; ctx.fillStyle=`rgba(255,215,60,${ap*(0.5+Math.sin(pt2*0.01+sp)*0.5)})`; ctx.font=`${w*0.04}px sans-serif`; ctx.fillText('✨',spx,spy); }
 	          if(pt2>2600){ const at2=Math.min(1,(pt2-2600)/400); ctx.fillStyle=`rgba(74,144,217,${at2*0.8})`; ctx.font=`bold ${w*0.07}px sans-serif`; ctx.textAlign='center'; ctx.fillText('药到了! 💊',cx,h*0.58); }
 	        }
@@ -1223,8 +1257,12 @@ const ANIM = {
           ctx.fillStyle='#333'; ctx.font=`${w*0.035}px sans-serif`; ctx.textAlign='left'; ctx.fillText(m.t,px-pw/2+12,py-ph/2+ph*0.13+(msgs.indexOf(m))*ph*0.1+ph*0.05); }
       }});
       // friend's reply bubbles
+_snd("msg",tt-2800);
+
       if(tt>2800){['我马上到!!','坚持住!','开门!'].forEach((r,i)=>{ const rd=2800+i*350; if(tt>rd){ const rp=Math.min(1,(tt-rd)/250); ctx.fillStyle='#fff'; ctx.strokeStyle='#4a90d9'; ctx.lineWidth=1; const rw=Math.min(pw-20,40+rp*25); _R(ctx,px+pw/2-rw-8,py-ph/2+ph*0.13+(4+i)*ph*0.09,rw,ph*0.06,4); ctx.fill(); ctx.stroke(); ctx.fillStyle='#333'; ctx.font=`${w*0.035}px sans-serif`; ctx.textAlign='right'; ctx.fillText(r,px+pw/2-12,py-ph/2+ph*0.13+(4+i)*ph*0.09+ph*0.04); }})}
       // big heart
+_snd("pop",tt-3200);
+
       if(tt>2800){ const rt2=(tt-2800)/800; ctx.fillStyle=`rgba(255,100,150,${Math.min(1,rt2)*0.7})`; ctx.font=`${w*0.08}px sans-serif`; ctx.textAlign='center'; ctx.fillText('❤',px+pw*0.2,py+ph*0.3); }
     }
   },
@@ -1241,6 +1279,8 @@ const ANIM = {
       // medicine items flying out
       const items2=[{c:'#e8734a',n:'💊',d:1200},{c:'#4a90d9',n:'💉',d:1500},{c:'#7bc67e',n:'🌡️',d:1800},{c:'#f4c542',n:'🩹',d:2100}];
       items2.forEach(it=>{ if(tt>it.d){ const ip=(tt-it.d)/600, is2=Math.min(1,ip); const ix=bx+bw/2+Math.cos(it.d*0.01)*bw*0.4, iy=by-bh*0.3-is2*15; ctx.fillStyle=`rgba(0,0,0,${is2})`; ctx.font=`${w*0.06}px sans-serif`; ctx.textAlign='center'; ctx.fillText(it.n,ix,iy); }});
+_snd("pop",tt-1200);
+
       // ice pack
       ctx.fillStyle='#4a90d9'; ctx.beginPath(); ctx.arc(cx+w*0.25,by-bh*0.35,9,0,Math.PI*2); ctx.fill();
       ctx.fillStyle='#fff'; ctx.font=`${w*0.05}px sans-serif`; ctx.textAlign='center'; ctx.fillText('❄',cx+w*0.25,by-bh*0.33);
@@ -1248,6 +1288,8 @@ const ANIM = {
       if(tt>1500){ for(let i=0;i<5;i++){ const st=(tt-1500+i*200)/700; if(st>0&&st<1){ const sx2=cx+Math.cos(i*1.3)*w*0.2,sy2=by-bh*0.4+Math.sin(i*2+tt*0.004)*10; ctx.fillStyle=`rgba(100,190,230,${0.5*(1-st)})`; ctx.beginPath(); ctx.arc(sx2,sy2,2+Math.random()*2,0,Math.PI*2); ctx.fill(); }}}
       ctx.fillStyle='#333'; ctx.font=`bold ${w*0.05}px sans-serif`; ctx.textAlign='center'; ctx.fillText('有备无患',cx,by+bh+18);
       // thermometer reading
+_snd("ding",tt-2500);
+
       if(tt>2500){ const tr=(tt-2500)/600; ctx.fillStyle=`rgba(255,60,60,${Math.min(1,tr)*0.7})`; ctx.font=`bold ${w*0.06}px sans-serif`; ctx.fillText('38.5°',cx+w*0.2,by-bh*0.5); }
     }
   },
@@ -1266,6 +1308,8 @@ const ANIM = {
       ctx.fillStyle='#333'; ctx.beginPath(); ctx.arc(cx-3,h*0.31,1.5,0,Math.PI*2); ctx.fill(); ctx.beginPath(); ctx.arc(cx+4,h*0.31,1.5,0,Math.PI*2); ctx.fill();
       ctx.strokeStyle='#c9a87c'; ctx.lineWidth=1.5; ctx.beginPath(); ctx.arc(cx,h*0.31,w*0.04,Math.PI*0.3,Math.PI*0.7); ctx.stroke();
       // Z's floating up - more of them
+_snd("pop",tt-500);
+
       for(let i=0;i<5;i++){ const zt=(tt*0.0012+i*1.2)%3.5; const zx=cx+Math.sin(i*2.1)*w*0.18,zy=h*0.28-zt*12; if(zt<3){ ctx.fillStyle=`rgba(255,255,255,${0.6*(1-zt/3)})`; ctx.font=`${w*0.06}px sans-serif`; ctx.textAlign='center'; ctx.fillText('Z',zx,zy); }}
       // blanket
       ctx.fillStyle='#f5e6d3'; ctx.fillRect(cx-w*0.15,h*0.15-w*0.08,w*0.3,h*0.12);
@@ -1276,6 +1320,8 @@ const ANIM = {
       for(let i=0;i<6;i++){ const ra=Math.PI*2/6*i+tt*0.001; ctx.strokeStyle=`rgba(255,215,60,${0.4+Math.sin(tt*0.003+i)*0.2})`; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(cx+w*0.32+Math.cos(ra)*w*0.09,sunY+Math.sin(ra)*w*0.09); ctx.lineTo(cx+w*0.32+Math.cos(ra)*w*0.14,sunY+Math.sin(ra)*w*0.14); ctx.stroke(); }
       // "zzz" text
       if(tt>2000){ const za=(tt-2000)/600; ctx.fillStyle=`rgba(200,200,220,${Math.min(1,za)*0.6})`; ctx.font=`${w*0.05}px sans-serif`; ctx.textAlign='center'; ctx.fillText('再睡5分钟...',cx,h*0.88); }
+_snd("pop",tt-2000);
+
     }
   },
   Q3_B: { duration:4200, drawStatic(ctx,w,h){ this.drawFrame(ctx,w,h,600); },
@@ -1287,12 +1333,16 @@ const ANIM = {
       ctx.fillStyle='#333'; ctx.fillRect(px-pw/2+3,py-ph/2+3,pw-6,ph*0.08);
       ctx.fillStyle='#fff'; ctx.font=`bold ${w*0.04}px sans-serif`; ctx.textAlign='center'; ctx.fillText('消息',px,py-ph/2+ph*0.055);
       // notification dot
+
+        _snd("ding",tt-2500);
       ctx.fillStyle='#ff3b3b'; ctx.beginPath(); ctx.arc(px-pw/2+3,py-ph/2+3,4,0,Math.PI*2); ctx.fill();
       // message list items with animating placeholders
       for(let i=0;i<3;i++){ const iy=py-ph/2+ph*0.14+i*ph*0.13;
         ctx.fillStyle='#fff'; ctx.strokeStyle='#eee'; ctx.lineWidth=1; _R(ctx,px-pw/2+6,iy,pw-12,ph*0.1,3); ctx.fill(); ctx.stroke();
         ctx.fillStyle='#ccc'; ctx.beginPath(); ctx.arc(px-pw/2+14,iy+ph*0.05,5,0,Math.PI*2); ctx.fill();
         // animated typing dots
+_snd("msg",tt-1000);
+
         const dotPhase=(tt*0.005+i*0.7)%3;
         for(let d=0;d<3;d++){ if(dotPhase>d*0.4){ ctx.fillStyle=`rgba(180,180,180,${0.6*(1-Math.max(0,dotPhase-d*0.4-0.2))})`; ctx.fillRect(px-pw/2+24+d*7,iy+ph*0.06,4,4); }}}
       // "no messages" appears, then fades
@@ -1307,6 +1357,8 @@ const ANIM = {
       const sceneCol=['#4a90d9','#e8734a','#7bc67e'];
       ctx.fillStyle=sceneCol[scene]; _R(ctx,cx-w*0.32,h*0.15,w*0.64,h*0.45,4); ctx.fill();
       // play button pulsing
+_snd("tap",tt-300);
+
       const pp=1+Math.sin(tt*0.006)*0.2;
       ctx.save(); ctx.translate(cx,h*0.38); ctx.scale(pp,pp);
       ctx.fillStyle='rgba(255,255,255,0.8)'; ctx.beginPath();
@@ -1319,6 +1371,8 @@ const ANIM = {
       const ep=Math.floor(tt/1000)%4+1;
       ctx.fillStyle='#aaa'; ctx.font=`${w*0.04}px sans-serif`; ctx.textAlign='center'; ctx.fillText(`第${ep}集`,cx,h*0.74);
       // equalizer bars
+_snd("pop",tt-1200);
+
       for(let i=0;i<5;i++){ const eh=3+Math.sin(tt*0.008+i*1.2)*4; ctx.fillStyle=sceneCol[Math.floor(i/2)]; ctx.fillRect(cx-w*0.25+i*w*0.1,h*0.78-eh,w*0.06,eh); }
       // video time display
       ctx.fillStyle='#888'; ctx.font=`${w*0.035}px sans-serif`; ctx.textAlign='right'; ctx.fillText(`${Math.floor(prog*45)}:${String(Math.floor(prog*60)%60).padStart(2,'0')}`,cx+w*0.28,h*0.74);
@@ -1344,7 +1398,11 @@ const ANIM = {
       // keyboard typing effect
       if(tt>800&&tt<3000){ for(let i=0;i<3;i++){ const kt=(tt-800-i*200)%600; if(kt<100){ ctx.fillStyle=`rgba(100,100,100,${0.3*(1-kt/100)})`; ctx.font=`${w*0.04}px sans-serif`; ctx.textAlign='center'; ctx.fillText('⌨️',cx-w*0.2+i*8,h*0.62); }}}
       // "deadline" flashing
+
+        _snd("whoosh",tt-2000);
       if(tt>2500){ const dp2=(tt-2500)/600; ctx.fillStyle=`rgba(255,60,60,${Math.min(1,dp2)*0.7*(0.6+Math.sin(tt*0.015)*0.4)})`; ctx.font=`bold ${w*0.05}px sans-serif`; ctx.textAlign='center'; ctx.fillText('⚡DEADLINE',cx,h*0.84); }
+_snd("whoosh",tt-2000);
+
     }
   },
 
@@ -1357,11 +1415,15 @@ const ANIM = {
       ctx.fillStyle='#fff'; ctx.beginPath(); ctx.arc(cx-3,h*0.12,2,0,Math.PI*2); ctx.fill(); ctx.beginPath(); ctx.arc(cx+3,h*0.12,2,0,Math.PI*2); ctx.fill();
       ctx.fillStyle='#333'; ctx.beginPath(); ctx.arc(cx-3,h*0.12,1,0,Math.PI*2); ctx.fill(); ctx.beginPath(); ctx.arc(cx+3,h*0.12,1,0,Math.PI*2); ctx.fill();
       // speech bubbles - more variety
+_snd("msg",tt-1000);
+
       const msgs=['啊啊啊啊啊!!!','气死我了!!!','你听我说!!!','真的无语了!!!','救命啊!!!','凭什么啊!!!'];
       for(let i=0;i<6;i++){ const bt=tt-i*220; if(bt>0&&bt<3000){ const s=_easeOutBack(Math.min(1,bt/300)); const side=i%2; const bx=cx-w*0.18+side*w*0.22,by=h*0.5-(5-i)*h*0.1,bw=w*0.22+s*w*0.05;
         ctx.fillStyle=side===0?'#7bc67e':'#fff'; _R(ctx,bx,by,bw,h*0.08,10); ctx.fill();
         ctx.fillStyle='#333'; ctx.font=`bold ${w*0.035}px sans-serif`; ctx.textAlign='left'; ctx.fillText(msgs[i],bx+4,by+h*0.055); }}
       // exclamation marks flying
+_snd("whoosh",tt-1800);
+
       for(let i=0;i<4;i++){ const et=(tt-1600-i*350)/450; if(et>0&&et<1.2){ ctx.fillStyle=`rgba(255,80,80,${0.8*(1-et/1.2)})`; ctx.font=`bold ${w*0.08}px sans-serif`; ctx.textAlign='center'; ctx.fillText('❗',cx+Math.sin(i*1.7)*w*0.2,h*0.22-et*22); }}
       // anger waves from face
       for(let i=0;i<3;i++){ const aw=(tt*0.004+i*1.2)%2; if(aw<1.5){ ctx.strokeStyle=`rgba(255,100,100,${0.4*(1-aw/1.5)})`; ctx.lineWidth=1.5; ctx.beginPath(); ctx.arc(cx,h*0.14,w*0.1+aw*6,-0.3,1.8); ctx.stroke(); }}
@@ -1384,6 +1446,8 @@ const ANIM = {
 	      ctx.beginPath(); ctx.arc(cartX+cartW*0.3,cartY+cartH*0.55,w*0.04,0,Math.PI*2); ctx.fill();
 	      const fallItems=[{n:'👜',c:'#e8734a',x:-0.2,d:0,s:0.9},{n:'🎧',c:'#4a90d9',x:0.1,d:350,s:1.1},{n:'⌨️',c:'#7bc67e',x:-0.05,d:650,s:1.0},{n:'🕯️',c:'#f4c542',x:0.15,d:900,s:0.95},{n:'💄',c:'#ff6b9d',x:-0.15,d:1150,s:1.05},{n:'📱',c:'#7bc67e',x:0.2,d:1400,s:1.0},{n:'👟',c:'#ff9ecf',x:0,d:1650,s:0.9}];
 	      fallItems.forEach(fi=>{ if(tt>fi.d){ const fp=Math.min(1,(tt-fi.d)/500); const fy=cartY-cartH*0.3+fp*fp*h*0.5; const fx=cartX+fi.x*w*0.35+Math.sin(fp*3)*w*0.05; const frot=Math.sin(fp*8)*0.3; const fsc=1+fp*0.3; ctx.save(); ctx.translate(fx,fy); ctx.rotate(frot); ctx.font=`${w*0.07*fsc}px sans-serif`; ctx.textAlign='center'; ctx.fillText(fi.n,0,0); ctx.restore();
+_snd("drop",tt-350);
+
 	        if(fp>0.85){ const sp=Math.min(1,(fp-0.85)/0.15); ctx.fillStyle=`rgba(255,215,60,${sp*0.7})`; ctx.font=`${w*0.03}px sans-serif`; ctx.textAlign='center'; ctx.fillText('💥',fx,fy+w*0.01); }
 	      }});
 	      const buyPulse=Math.sin(tt*0.004)*0.1+0.9;
@@ -1394,6 +1458,8 @@ const ANIM = {
 	      ctx.fillStyle='#fff'; ctx.font=`bold ${w*0.05}px sans-serif`; ctx.textAlign='center'; ctx.fillText(`合计 ¥${totalPrice}  (${itemCount}件)`,cx,h*0.85);
 	      for(let sp=0;sp<8;sp++){ const spa=tt*0.003+sp*Math.PI/4; const spx=cartX+Math.cos(spa)*cartW*0.5,spy=cartY+Math.sin(spa)*cartH*0.4; ctx.fillStyle=`rgba(255,215,60,${0.3+Math.sin(tt*0.01+sp)*0.3})`; ctx.font=`${w*0.035}px sans-serif`; ctx.textAlign='center'; ctx.fillText('✨',spx,spy); }
 	      if(tt>2400){ const ap=Math.min(1,(tt-2400)/500); ctx.fillStyle=`rgba(124,198,110,${ap*0.9})`; ctx.font=`bold ${w*0.08}px sans-serif`; ctx.textAlign='center'; ctx.fillText('下单成功! 🎉',cx,h*0.10); }
+_snd("success",tt-2800);
+
 	    }
 	  },
   Q4_C: { duration:3500, drawStatic(ctx,w,h){ this.drawFrame(ctx,w,h,500); },
@@ -1424,6 +1490,8 @@ const ANIM = {
       // flowers on ground
       for(let i=0;i<3;i++){ ctx.fillStyle=['#ff6b6b','#ffd73c','#ff9ecf'][i]; ctx.beginPath(); ctx.arc(cx-w*0.2+i*w*0.2,h*0.78,3,0,Math.PI*2); ctx.fill(); ctx.fillStyle='#7bc67e'; ctx.fillRect(cx-w*0.2+i*w*0.2-0.5,h*0.78,1,4); }
       // music notes
+_snd("pop",tt-500);
+
       for(let i=0;i<3;i++){ const mn=(tt*0.002+i*1.5)%3; ctx.fillStyle=`rgba(100,100,200,${0.5*(1-mn/3)})`; ctx.font=`${w*0.05}px sans-serif`; ctx.textAlign='center'; ctx.fillText('♪',charX+w*0.1+mn*5,charY-w*0.1-mn*8); }
     }
   },
@@ -1448,10 +1516,14 @@ const ANIM = {
       // heart/like icons on phone
       for(let i=0;i<3;i++){ const lk=(tt*0.005+i*1.5)%3; if(lk<2){ ctx.fillStyle=`rgba(255,100,130,${0.6*(1-lk/2)})`; ctx.font=`${w*0.04}px sans-serif`; ctx.fillText('❤',px-ps/2+8+lk*3,py-ps/2+vh+i*(vh+4)+2); }}
       // swipe up indicator
+
+        _snd("pop",tt-800);
       if(tt>1000){ const sw=(tt-1000)/500%2; ctx.strokeStyle=`rgba(150,150,150,${0.3+Math.sin(sw*Math.PI)*0.3})`; ctx.lineWidth=1.5; ctx.setLineDash([2,3]); ctx.beginPath(); ctx.moveTo(px+ps*0.3,py+ps*0.6); ctx.lineTo(px+ps*0.3,py+ps*0.75); ctx.stroke(); ctx.setLineDash([]); }
       // "2小时..." text
       const tp2=(tt%4500)/4500; if(tp2>0.7&&tp2<0.95){ ctx.fillStyle=`rgba(255,255,255,${0.6*(1-(tp2-0.7)/0.25)})`; ctx.font=`bold ${w*0.05}px sans-serif`; ctx.textAlign='center'; ctx.fillText('2小时过去了...',cx,h*0.82); }
       // Zzz indicator (person is zoned out)
+
+        _snd("pop",tt-2000);
       for(let i=0;i<2;i++){ const zt=(tt*0.002+i*1.5)%3; if(zt<2.2){ ctx.fillStyle=`rgba(120,120,120,${0.4*(1-zt/2.2)})`; ctx.font=`${w*0.04}px sans-serif`; ctx.fillText('z',cx-w*0.08+zt*4,h*0.35-zt*5); }}
     }
   },
@@ -1464,6 +1536,8 @@ const ANIM = {
       ctx.fillStyle='#8b6914'; _R(ctx,cx-w*0.18,h*0.28,w*0.36,h*0.52,6); ctx.fill();
       ctx.fillStyle='#6b4f0a'; _R(ctx,cx-w*0.14,h*0.31,w*0.28,h*0.46,4); ctx.fill();
       // lock - pulsing
+
+        _snd("tap",tt-500);
       const lockPulse=1+Math.sin(tt*0.006)*0.2;
       ctx.fillStyle='#ffd73c'; ctx.beginPath(); ctx.arc(cx,h*0.44,5*lockPulse,0,Math.PI*2); ctx.fill();
       ctx.fillStyle='#333'; ctx.fillRect(cx-1,h*0.44,2,4);
@@ -1517,6 +1591,8 @@ const ANIM = {
       ctx.beginPath(); ctx.moveTo(fx-13,fyBase-32+bob); ctx.lineTo(fx-19,fyBase-20+Math.sin(tt*0.005)*3+bob); ctx.stroke();
       ctx.beginPath(); ctx.moveTo(fx+13,fyBase-32+bob); ctx.lineTo(fx+19,fyBase-20+Math.cos(tt*0.005)*3+bob); ctx.stroke();
       // ---- phase 1: magnifying glass sweeps in (600ms) ----
+_snd("whoosh",tt-1000);
+
       if(tt>600){
         const mp=Math.min(1,(tt-600)/450), ms=_easeOutBack(mp);
         const mgX=fx-w*0.35+ms*(fx-w*0.08), mgY=h*0.2;
@@ -1564,6 +1640,8 @@ const ANIM = {
           const sa=(xp-0.4)/0.6;
           ctx.fillStyle=`rgba(255,50,50,${sa*0.9})`; ctx.font=`bold ${w*0.07}px sans-serif`; ctx.textAlign='center';
           ctx.fillText('不行!',0,16);
+
+        _snd("drop",tt-2500);
         }
         ctx.restore();
       }
@@ -1578,6 +1656,8 @@ const ANIM = {
         ctx.restore();
       }
       // ---- phase 6: "下一个!" appears (3400ms) ----
+_snd("pop",tt-3500);
+
       if(tt>3400){
         const np=Math.min(1,(tt-3400)/500), ns=_easeOutBack(np);
         ctx.fillStyle=`rgba(255,215,60,${ns})`; ctx.font=`bold ${w*0.09}px sans-serif`; ctx.textAlign='center';
@@ -1605,6 +1685,8 @@ const ANIM = {
     drawFrame(ctx,w,h,t){ const tt=t,cx=w/2;
       ctx.clearRect(0,0,w,h); ctx.fillStyle='#f5f0e8'; ctx.fillRect(0,0,w,h);
       // price tag card
+_snd("tap",tt-800);
+
       ctx.fillStyle='#fff'; _R(ctx,cx-w*0.2,h*0.18,w*0.4,h*0.38,8); ctx.fill(); ctx.strokeStyle='#ddd'; ctx.lineWidth=1.5; ctx.stroke();
       // hole punch
       ctx.fillStyle='#333'; ctx.beginPath(); ctx.arc(cx-w*0.2,h*0.23,3.5,0,Math.PI*2); ctx.fill();
@@ -1623,6 +1705,8 @@ const ANIM = {
       if(tt>1500){ const bt=(tt-1500)/600, bs=Math.min(1,bt); ctx.fillStyle=`rgba(255,80,80,${bs*0.3})`; ctx.fillRect(cx-w*0.15,h*0.56,w*0.3,2);
         ctx.fillStyle=`rgba(255,60,60,${bs*0.8})`; ctx.font=`bold ${w*0.05}px sans-serif`; ctx.textAlign='center'; ctx.fillText('太贵就算了!',cx,h*0.78); }
       // X mark developing
+_snd("drop",tt-2000);
+
       if(tt>2200){ const xa=(tt-2200)/400, xs2=_easeOutBack(Math.min(1,xa)); ctx.strokeStyle=`rgba(255,60,60,${xs2*0.7})`; ctx.lineWidth=2; ctx.lineCap='round'; ctx.beginPath(); ctx.moveTo(cx-8*xs2,h*0.36-8*xs2); ctx.lineTo(cx+8*xs2,h*0.36+8*xs2); ctx.moveTo(cx+8*xs2,h*0.36-8*xs2); ctx.lineTo(cx-8*xs2,h*0.36+8*xs2); ctx.stroke(); }
     }
   },
@@ -1679,6 +1763,8 @@ const ANIM = {
       ctx.fillStyle='rgba(255,150,150,0.3)'; ctx.beginPath(); ctx.arc(cx2-9,headY+2,3.5,0,Math.PI*2); ctx.fill();
       ctx.beginPath(); ctx.arc(cx2+9,headY+2,3.5,0,Math.PI*2); ctx.fill();
       // ---- floating hearts & stars ----
+_snd("pop",tt-600);
+
       for(let i=0;i<8;i++){
         const ht=(tt*0.0012+i*0.55)%4;
         if(ht<3.2){
@@ -1697,6 +1783,8 @@ const ANIM = {
         ctx.fillText('真的?!',cx2,h*0.15);
       }
       // ---- phase 2: calendar flies in (1400ms) ----
+_snd("ding",tt-1800);
+
       if(tt>1400){
         const cp=Math.min(1,(tt-1400)/400), cs=_easeOutBack(cp);
         const calX=cx2-w*0.28, calY=h*0.58, calW=w*0.3, calH=h*0.25;
@@ -1728,6 +1816,8 @@ const ANIM = {
         ctx.restore();
       }
       // ---- phase 3: "马上来!!!" text (2000ms) ----
+_snd("success",tt-2800);
+
       if(tt>2000){
         const tp2=Math.min(1,(tt-2000)/350), ts2=_easeOutBack(tp2);
         ctx.fillStyle=`rgba(255,60,80,${ts2})`; ctx.font=`bold ${w*0.08}px sans-serif`; ctx.textAlign='center';
@@ -1775,6 +1865,8 @@ const ANIM = {
       // lonely tumbleweed effect
       if(tt>1800){ const tw=(tt-1800)/600%2; ctx.fillStyle=`rgba(150,150,150,${0.3*(1-Math.abs(tw-1))})`; ctx.font=`${w*0.06}px sans-serif`; ctx.fillText('🍂',px-w*0.15+tw*w*0.3,py-ph/2+ph*0.3); }
       ctx.fillStyle='#888'; ctx.font=`${w*0.04}px sans-serif`; ctx.textAlign='center'; ctx.fillText('暂无联系人',px,py+ph*0.2);
+_snd("pop",tt-1000);
+
     }
   },
   Q6_B: { duration:3800, drawStatic(ctx,w,h){ this.drawFrame(ctx,w,h,600); },
@@ -1795,7 +1887,11 @@ const ANIM = {
       for(let i=0;i<2;i++){ const ht=(tt*0.002+i*1.3)%2.5; if(ht<1.8){ ctx.fillStyle=`rgba(255,100,160,${0.5*(1-ht/1.8)})`; ctx.font=`${w*0.05}px sans-serif`; ctx.fillText('❤',px+pw/3+i*6,py-ph/2+ph*0.1+i*ph*0.13); }}
       // "call" button pulsing on first contact
       if(tt>1500&&tt<3300){ const ca=(tt-1500)/400%2; ctx.fillStyle=`rgba(124,198,110,${0.3+Math.sin(ca*Math.PI)*0.4})`; ctx.font=`bold ${w*0.035}px sans-serif`; ctx.textAlign='right'; ctx.fillText('可通话',px+pw/2-8,py-ph/2+ph*0.19); }
+_snd("tap",tt-800);
+
       // "1-2" badge
+
+        _snd("ding",tt-2000);
       ctx.fillStyle='#7bc67e'; ctx.beginPath(); ctx.arc(px+pw*0.3,py-ph/2,5,0,Math.PI*2); ctx.fill();
       ctx.fillStyle='#fff'; ctx.font=`bold ${w*0.03}px sans-serif`; ctx.textAlign='center'; ctx.fillText('2',px+pw*0.3,py-ph/2+1);
     }
@@ -1817,8 +1913,12 @@ const ANIM = {
       // glow particles
       if(tt>1000){ for(let i=0;i<4;i++){ const nt=((tt-1000)*0.003+i*1.2)%3; ctx.fillStyle=`rgba(255,215,60,${0.5*(1-nt/3)})`; ctx.beginPath(); ctx.arc(cx+Math.cos(i*1.6)*w*0.16,py+Math.sin(i*1.6)*h*0.2,2+nt,0,Math.PI*2); ctx.fill(); }}
       // "在线" indicators
+_snd("pop",tt-600);
+
       for(let i=0;i<2;i++){ if(tt>600+i*300){ const ol=(tt-600-i*300)/400%3; ctx.fillStyle=`rgba(124,198,110,${0.4+Math.sin(ol)*0.4})`; ctx.font=`${w*0.025}px sans-serif`; ctx.textAlign='right'; ctx.fillText('在线',px+pw/2-6,py-ph/2+ph*0.12+i*ph*0.09+ph*0.05); }}
       // "3-5" badge
+
+        _snd("ding",tt-2000);
       ctx.fillStyle='#ffd73c'; ctx.beginPath(); ctx.arc(px+pw*0.3,py-ph/2,5,0,Math.PI*2); ctx.fill();
       ctx.fillStyle='#333'; ctx.font=`bold ${w*0.03}px sans-serif`; ctx.textAlign='center'; ctx.fillText('4',px+pw*0.3,py-ph/2+1);
     }
@@ -1838,12 +1938,16 @@ const ANIM = {
       // "5+" text
       ctx.fillStyle='#999'; ctx.font=`bold ${w*0.07}px sans-serif`; ctx.textAlign='center'; ctx.fillText('5+',cx,py-ph/2+ph*0.58);
       // call buttons appear
+_snd("tap",tt-500);
+
       for(let i=0;i<3;i++){ if(tt>800+i*300){ const cb=(tt-800-i*300)/400; ctx.fillStyle=`rgba(124,198,110,${Math.min(1,cb)*0.6})`; ctx.font=`${w*0.035}px sans-serif`; ctx.fillText('📞',px+pw/2-6,py-ph/2+ph*0.13+i*ph*0.07); }}
       // X appears over call buttons
       if(tt>1500){ const rt=(tt-1500)/700, rs=Math.min(1,rt); ctx.fillStyle=`rgba(255,100,100,${rs*0.7})`; ctx.font=`bold ${w*0.06}px sans-serif`; ctx.textAlign='center'; ctx.fillText('✕',cx+Math.sin(tt*0.003)*3,py+ph*0.22); }
       // hesitation dots
       if(tt>2000){ for(let i=0;i<3;i++){ const hd=(tt-2000-i*300)%1200; if(hd>0&&hd<400){ ctx.fillStyle=`rgba(150,150,150,${0.5*(1-hd/400)})`; ctx.font=`bold ${w*0.04}px sans-serif`; ctx.fillText('.',cx-w*0.05+i*5,py+ph*0.28); }}}
       // "算了不打"
+_snd("pop",tt-2800);
+
       if(tt>2400){ const sd=(tt-2400)/600, ss2=Math.min(1,sd); ctx.fillStyle=`rgba(180,180,180,${ss2*0.8})`; ctx.font=`${w*0.05}px sans-serif`; ctx.textAlign='center'; ctx.fillText('算了，不打',cx,h*0.84); }
     }
   },
@@ -1856,6 +1960,8 @@ const ANIM = {
       ctx.fillStyle='#3d2d1a'; _R(ctx,cx-w*0.15,h*0.28,w*0.3,h*0.52,6); ctx.fill();
       ctx.fillStyle='#2d1d0a'; _R(ctx,cx-w*0.11,h*0.31,w*0.22,h*0.46,4); ctx.fill();
       // candle flickering
+
+        _snd("pop",tt-500);
       const flicker=1+Math.sin(tt*0.015)*0.3+Math.sin(tt*0.023)*0.2;
       ctx.fillStyle='#ffd73c'; ctx.beginPath(); ctx.arc(cx,h*0.42,4,0,Math.PI*2); ctx.fill();
       // flame
@@ -1865,6 +1971,8 @@ const ANIM = {
       // eye peeking - moves
       if(tt>800&&tt<3500){ const et=(tt-800)/500; ctx.fillStyle='#fff'; ctx.beginPath(); ctx.arc(cx+w*0.1,h*0.2-Math.sin(tt*0.004)*3,6,0,Math.PI*2); ctx.fill(); ctx.fillStyle='#000'; ctx.beginPath(); ctx.arc(cx+w*0.1+Math.sin(tt*0.003)*2,h*0.2-Math.sin(tt*0.004)*3,3,0,Math.PI*2); ctx.fill(); }
       // "有人吗..." text
+_snd("pop",tt-2500);
+
       if(tt>2200){ const gs=(tt-2200)/500; ctx.fillStyle=`rgba(200,200,200,${Math.min(1,gs)*0.6})`; ctx.font=`${w*0.04}px sans-serif`; ctx.textAlign='center'; ctx.fillText('有人吗...',cx-w*0.05,h*0.92); }
     }
   },
@@ -1878,6 +1986,8 @@ const ANIM = {
       ctx.beginPath(); ctx.moveTo(cx-w*0.15,h*0.55); ctx.lineTo(cx-w*0.15,h*0.32); ctx.stroke();
       ctx.fillStyle='#7ba8d0'; ctx.beginPath(); ctx.arc(cx-w*0.12,h*0.3,7,0,Math.PI*2); ctx.fill();
       // water spray from pipe
+_snd("whoosh",tt-800);
+
       for(let i=0;i<5;i++){ const dr=(tt*0.004+i*0.6)%2; if(dr<1.5){ ctx.fillStyle=`rgba(100,180,220,${0.6*(1-dr/1.5)})`; ctx.beginPath(); ctx.arc(cx-w*0.12+Math.cos(i)*8,h*0.34+dr*10,1.5+dr,0,Math.PI*2); ctx.fill(); }}
       // character
       const charX=cx+w*0.1,charY=h*0.4,charR=w*0.08;
@@ -1891,6 +2001,8 @@ const ANIM = {
       ctx.fillStyle='#2c2c3e'; _R(ctx,cx+w*0.2,h*0.58,w*0.12,h*0.18,4); ctx.fill();
       ctx.fillStyle='#f8f8f8'; _R(ctx,cx+w*0.22,h*0.6,w*0.08,h*0.1,2); ctx.fill();
       // wrench emoji
+_snd("tap",tt-2000);
+
       if(tt>800){ const we=(tt-800)/400%3; ctx.fillStyle=`rgba(0,0,0,${0.5+Math.sin(we)*0.3})`; ctx.font=`${w*0.05}px sans-serif`; ctx.fillText('🔧',cx+w*0.05,h*0.58+Math.sin(tt*0.005)*2); }
       // panic lines
       if(tt>1200){ for(let i=0;i<3;i++){ const pl=(tt-1200-i*300)/600; if(pl>0&&pl<1){ ctx.strokeStyle=`rgba(255,80,80,${0.4*(1-pl)})`; ctx.lineWidth=1; ctx.beginPath(); ctx.arc(charX,charY-charR-4-pl*6,6,0.3,2.5); ctx.stroke(); }}}
@@ -1902,6 +2014,8 @@ const ANIM = {
       // door
       ctx.fillStyle='#3d2d1a'; _R(ctx,cx-w*0.15,h*0.24,w*0.3,h*0.56,6); ctx.fill();
       // lock/keyhole
+
+        _snd("ding",tt-1200);
       ctx.fillStyle='#ffd73c'; ctx.beginPath(); ctx.arc(cx,h*0.4,3.5,0,Math.PI*2); ctx.fill();
       ctx.fillStyle='#000'; ctx.fillRect(cx-0.5,h*0.4-3,1,5);
       // character looking at door
@@ -1921,6 +2035,8 @@ const ANIM = {
         for(let i=0;i<4;i++){ const st=(tt-1600+i*200)/600; if(st>0&&st<1.2){ ctx.fillStyle=`rgba(255,80,80,${(1-st/1.2)*0.8})`; ctx.font=`bold ${w*0.05}px sans-serif`; ctx.textAlign='center'; ctx.fillText('?',charX+Math.sin(i*1.3)*14,charY-w*0.1-st*18); }}
       }
       // "忘了带钥匙" text
+_snd("pop",tt-2500);
+
       if(tt>2200){ const fo=(tt-2200)/500; ctx.fillStyle=`rgba(255,200,100,${Math.min(1,fo)*0.7})`; ctx.font=`bold ${w*0.05}px sans-serif`; ctx.textAlign='center'; ctx.fillText('忘了带钥匙!!',cx,h*0.88); }
     }
   },
@@ -1938,6 +2054,8 @@ const ANIM = {
       ctx.fillStyle='#000'; ctx.beginPath(); ctx.arc(cx-4-Math.sin(tt*0.003),h*0.34,w*0.025,0,Math.PI*2); ctx.fill();
       ctx.beginPath(); ctx.arc(cx+4+Math.sin(tt*0.003),h*0.34,w*0.025,0,Math.PI*2); ctx.fill();
       // evil grin - wobbles
+_snd("whoosh",tt-1000);
+
       const grinT=Math.sin(tt*0.005)*0.4;
       ctx.fillStyle='#000'; ctx.font=`bold ${w*0.05}px sans-serif`; ctx.textAlign='center'; ctx.fillText('😈',cx,h*0.42+grinT*4);
       // creepy smile
@@ -1945,6 +2063,8 @@ const ANIM = {
       // "BOO!" text pops
       if(tt>800){ const bt=_easeOutBack(Math.min(1,(tt-800)/400)); ctx.fillStyle=`rgba(255,215,60,${bt*0.8})`; ctx.font=`bold ${w*0.08}px sans-serif`; ctx.textAlign='center'; ctx.fillText('BOO!',cx,h*0.64+Math.sin(tt*0.006)*3); }
       // creepy sparkles
+
+        _snd("pop",tt-2200);
       for(let i=0;i<4;i++){ const cs=(tt*0.003+i*1.3)%3; if(cs<2){ ctx.fillStyle=`rgba(200,180,255,${0.5*(1-cs/2)})`; ctx.font=`${w*0.04}px sans-serif`; ctx.fillText('👻',cx+Math.cos(i*1.6)*w*0.22,h*0.4+Math.sin(i*1.6)*h*0.18-cs*5); }}
       // pulse effect on mirror
       if(tt>1500){ const mp=(tt-1500)/500%2; ctx.strokeStyle=`rgba(200,150,255,${0.4*(1-Math.abs(mp-1))})`; ctx.lineWidth=3; ctx.beginPath(); ctx.arc(cx,h*0.36,w*0.17+Math.abs(mp-1)*5,0,Math.PI*2); ctx.stroke(); }
@@ -1962,6 +2082,8 @@ const ANIM = {
       // sand
       ctx.fillStyle='#f5deb3'; ctx.fillRect(0,h*0.6,w,h*0.4);
       // ocean waves
+_snd("whoosh",tt-500);
+
       for(let i=0;i<6;i++){ const wy=h*0.54+i*6; ctx.fillStyle=`rgba(74,144,217,${0.4-i*0.06})`; ctx.fillRect(0,wy+Math.sin(tt*0.004+i)*3,w,3); }
       ctx.fillStyle='#4a90d9'; ctx.fillRect(0,h*0.6,w,3);
       // palm tree
@@ -1974,6 +2096,8 @@ const ANIM = {
       ctx.beginPath(); ctx.arc(w*0.07,-w*0.02,w*0.06,Math.PI,2*Math.PI); ctx.fill();
       ctx.restore();
       // coconut
+
+        _snd("pop",tt-2000);
       ctx.fillStyle='#8b6914'; ctx.beginPath(); ctx.arc(cx,h*0.28,4,0,Math.PI*2); ctx.fill();
       // sunbathing
       if(tt>1000&&tt<3500){ const ct=(tt-1000)/500; ctx.fillStyle='#ffd73c'; ctx.font=`bold ${w*0.1}px sans-serif`; ctx.textAlign='center'; ctx.fillText('🏝️',cx+Math.sin(tt*0.003)*w*0.12,h*0.48); }
@@ -1997,10 +2121,14 @@ const ANIM = {
       ctx.fillStyle='#fff'; _R(ctx,cx-w*0.15,h*0.46,w*0.3,h*0.16,4); ctx.fill();
       for(let i=0;i<4;i++){ ctx.fillStyle='#ddd'; ctx.fillRect(cx-w*0.1,h*0.48+i*3.5,w*0.22,2); }
       // stamp hand moving
+_snd("tap",tt-600);
+
       const stampX=cx+w*0.12,stampY=h*0.52+Math.sin(tt*0.008)*6;
       ctx.fillStyle='#e8734a'; _R(ctx,stampX-6,stampY-4,12,8,3); ctx.fill();
       ctx.fillStyle='#fff'; ctx.font=`bold ${w*0.025}px sans-serif`; ctx.textAlign='center'; ctx.fillText('批',stampX,stampY+1);
       // yawn
+_snd("pop",tt-2500);
+
       if(tt>1500){ const yt=_easeOutBack(Math.min(1,(tt-1500)/400)); ctx.fillStyle=`rgba(150,150,150,${yt*0.5})`; ctx.font=`${w*0.08}px sans-serif`; ctx.textAlign='center'; ctx.fillText('🥱',cx,h*0.76); }
       // coffee cup
       ctx.fillStyle='#6b4f3a'; ctx.beginPath(); ctx.arc(cx-w*0.22,h*0.44,5,0,Math.PI*2); ctx.fill();
@@ -2024,11 +2152,15 @@ const ANIM = {
       // second leaf
       ctx.fillStyle='#6ab85a'; ctx.beginPath(); ctx.arc(cx-w*0.08,h*0.54,w*0.04,0,Math.PI*2); ctx.fill();
       // tea cup with steam
+_snd("pop",tt-1800);
+
       ctx.fillStyle='#f4c542'; ctx.beginPath(); ctx.arc(cx+w*0.15,h*0.6,8,0,Math.PI*2); ctx.fill();
       ctx.fillStyle='#ffd73c'; ctx.beginPath(); ctx.arc(cx+w*0.15,h*0.6,5,0,Math.PI*2); ctx.fill();
       // steam from tea
       for(let i=0;i<4;i++){ const st=(tt*0.0015+i*1.3)%4; if(st<3){ ctx.fillStyle=`rgba(180,160,140,${0.3*(1-st/3)})`; ctx.beginPath(); ctx.arc(cx+w*0.15+Math.sin(i*2)*5,h*0.6-8-st*7,2+st,0,Math.PI*2); ctx.fill(); }}
       // butterfly
+_snd("pop",tt-800);
+
       const bfX=cx-w*0.2+Math.sin(tt*0.004)*w*0.35,bfY=h*0.35+Math.cos(tt*0.006)*15;
       ctx.fillStyle='#ff9ecf'; ctx.font=`${w*0.06}px sans-serif`; ctx.textAlign='center'; ctx.fillText('🦋',bfX,bfY);
       // "岁月静好"
@@ -2044,6 +2176,8 @@ const ANIM = {
       // sun/explosion in sky
       ctx.fillStyle='#ffd73c'; ctx.beginPath(); ctx.arc(cx,h*0.28,12,0,Math.PI*2); ctx.fill();
       // rotating sun rays
+_snd("whoosh",tt-500);
+
       for(let i=0;i<8;i++){ const ra=Math.PI*2/8*i+tt*0.0015; ctx.strokeStyle=`rgba(255,215,60,${0.4+Math.sin(tt*0.006+i)*0.3})`; ctx.lineWidth=1.2; ctx.beginPath(); ctx.moveTo(cx,h*0.28); ctx.lineTo(cx+Math.cos(ra)*w*0.2,h*0.28+Math.sin(ra)*w*0.2); ctx.stroke(); }
       // cool character
       ctx.fillStyle='#6b3a8c'; ctx.beginPath(); ctx.arc(cx,h*0.48,w*0.13,0,Math.PI*2); ctx.fill();
@@ -2053,8 +2187,12 @@ const ANIM = {
       // cool smile
       ctx.fillStyle='#fff'; ctx.font=`bold ${w*0.06}px sans-serif`; ctx.textAlign='center'; ctx.fillText('😎',cx,h*0.5);
       // explosion particles
+_snd("pop",tt-1200);
+
       for(let i=0;i<8;i++){ const ep2=(tt*0.002+i*0.7)%4; if(ep2<3){ const ex=cx+Math.cos(i*0.8+tt*0.003)*w*0.25, ey=h*0.48+Math.sin(i*0.8+tt*0.003)*h*0.2-ep2*5; ctx.fillStyle=`rgba(255,215,60,${0.7*(1-ep2/3)})`; ctx.font=`${w*0.05}px sans-serif`; ctx.fillText(['⭐','💥','🔥','✨','💫','🌟','⚡','🎆'][i],ex,ey); }}
       // "我是主角" text with glow
+_snd("success",tt-2500);
+
       if(tt>800){ const ht2=(tt-800)/500; ctx.fillStyle=`rgba(255,215,60,${Math.min(1,ht2)*0.9})`; ctx.font=`bold ${w*0.06}px sans-serif`; ctx.textAlign='center'; ctx.fillText('✨ 我是主角 ✨',cx,h*0.84); }
       // bass beat effect (vibration rings)
       if(tt>1500){ for(let i=0;i<3;i++){ const bb=(tt-1500-i*400)%1000; if(bb<800){ const br=5+bb*0.02; ctx.strokeStyle=`rgba(255,255,255,${0.3*(1-bb/800)})`; ctx.lineWidth=1.5; ctx.beginPath(); ctx.arc(cx,h*0.48,br,0,Math.PI*2); ctx.stroke(); }}}
@@ -2070,6 +2208,79 @@ function _drawHeart(ctx,x,y,s,c){
   ctx.bezierCurveTo(x,y+t*3,x+s/2,y+t,x+s/2,y); ctx.bezierCurveTo(x+s/2,y-t,x,y,x,y+t);
   ctx.fill();
 }
+
+// Audio context (lazy init)
+let _audioCtx = null;
+function _getAudio() {
+  if (!_audioCtx) { try { _audioCtx = new (window.AudioContext||window.webkitAudioContext)(); } catch(e) {} }
+  if (_audioCtx && _audioCtx.state === 'suspended') { _audioCtx.resume(); }
+  return _audioCtx;
+}
+function _playSound(type, vol) {
+  const ac = _getAudio();
+  if (!ac) return;
+  const v = vol || 0.08;
+  const now = ac.currentTime;
+  const g = ac.createGain();
+  g.connect(ac.destination);
+  g.gain.setValueAtTime(v, now);
+  if (type === 'tap') {
+    const o = ac.createOscillator();
+    o.type = 'sine'; o.frequency.setValueAtTime(1800, now); o.frequency.exponentialRampToValueAtTime(800, now+0.05);
+    o.connect(g); g.gain.exponentialRampToValueAtTime(0.001, now+0.06);
+    o.start(now); o.stop(now+0.06);
+  } else if (type === 'ding') {
+    [1200,1600].forEach((f,i) => {
+      const o = ac.createOscillator();
+      o.type = 'sine'; o.frequency.setValueAtTime(f, now+i*0.06);
+      o.connect(g); g.gain.setValueAtTime(v, now+i*0.06); g.gain.exponentialRampToValueAtTime(0.001, now+i*0.06+0.12);
+      o.start(now+i*0.06); o.stop(now+i*0.06+0.12);
+    });
+    g.gain.exponentialRampToValueAtTime(0.001, now+0.25);
+  } else if (type === 'drop') {
+    const o = ac.createOscillator();
+    o.type = 'triangle'; o.frequency.setValueAtTime(300, now); o.frequency.exponentialRampToValueAtTime(60, now+0.12);
+    o.connect(g); g.gain.exponentialRampToValueAtTime(0.001, now+0.15);
+    o.start(now); o.stop(now+0.15);
+  } else if (type === 'success') {
+    [523,659,784].forEach((f,i) => {
+      const o = ac.createOscillator();
+      o.type = 'sine'; o.frequency.setValueAtTime(f, now+i*0.1);
+      o.connect(g); g.gain.setValueAtTime(v, now+i*0.1); g.gain.exponentialRampToValueAtTime(0.001, now+i*0.1+0.2);
+      o.start(now+i*0.1); o.stop(now+i*0.1+0.2);
+    });
+    g.gain.exponentialRampToValueAtTime(0.001, now+0.55);
+  } else if (type === 'whoosh') {
+    const b = ac.createBuffer(1, ac.sampleRate*0.15, ac.sampleRate);
+    const d = b.getChannelData(0);
+    for (let i=0;i<d.length;i++) { d[i] = (Math.random()*2-1) * (1-i/d.length); }
+    const s = ac.createBufferSource(); s.buffer = b;
+    const f = ac.createBiquadFilter(); f.type = 'bandpass'; f.frequency.setValueAtTime(800, now); f.frequency.exponentialRampToValueAtTime(200, now+0.15);
+    s.connect(f); f.connect(g);
+    g.gain.setValueAtTime(v*0.5, now); g.gain.exponentialRampToValueAtTime(0.001, now+0.18);
+    s.start(now); s.stop(now+0.18);
+  } else if (type === 'pop') {
+    const o = ac.createOscillator();
+    o.type = 'sine'; o.frequency.setValueAtTime(600, now); o.frequency.exponentialRampToValueAtTime(200, now+0.04);
+    o.connect(g); g.gain.exponentialRampToValueAtTime(0.001, now+0.05);
+    o.start(now); o.stop(now+0.05);
+  } else if (type === 'msg') {
+    [800,1000].forEach((f,i) => {
+      const o = ac.createOscillator();
+      o.type = 'sine'; o.frequency.setValueAtTime(f, now+i*0.08);
+      o.connect(g); g.gain.setValueAtTime(v, now+i*0.08); g.gain.exponentialRampToValueAtTime(0.001, now+i*0.08+0.06);
+      o.start(now+i*0.08); o.stop(now+i*0.08+0.06);
+    });
+    g.gain.exponentialRampToValueAtTime(0.001, now+0.2);
+  }
+}
+function _snd(name, t) {
+  if (!_sndCanvas) return;
+  const key = _sndCanvas._animKey + '__' + name;
+  if (!_sndCanvas._sf) _sndCanvas._sf = new Set();
+  if (!_sndCanvas._sf.has(key) && t >= 0) { _sndCanvas._sf.add(key); _playSound(name); }
+}
+let _sndCanvas = null;
 
 // Active animation tracking
 const _activeAnims = new Map(); // canvas -> rafId
@@ -2094,16 +2305,19 @@ function _startAnim(canvas) {
   const def = ANIM[canvas._animKey];
   if (!def) return;
   _stopAnim(canvas);
+  canvas._sf = new Set();
   const ctx = canvas.getContext('2d');
   const size = canvas._size;
   let start = null;
   function frame(ts) {
     if (start === null) start = ts;
     const elapsed = ts - start;
+    _sndCanvas = canvas;
     ctx.save();
     ctx.setTransform(canvas._dpr||1, 0, 0, canvas._dpr||1, 0, 0);
     def.drawFrame(ctx, size, size, elapsed % def.duration);
     ctx.restore();
+    _sndCanvas = null;
     canvas._rafId = requestAnimationFrame(frame);
   }
   canvas._rafId = requestAnimationFrame(frame);
