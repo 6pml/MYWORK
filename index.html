@@ -1368,30 +1368,34 @@ const ANIM = {
       ctx.fillStyle='#fff'; ctx.font=`bold ${w*0.05}px sans-serif`; ctx.textAlign='center'; ctx.fillText('疯狂输出中...',cx,h*0.84);
     }
   },
-  Q4_B: { duration:4200, drawStatic(ctx,w,h){ this.drawFrame(ctx,w,h,1200); },
-    drawFrame(ctx,w,h,t){ const tt=t,cx=w/2;
-      ctx.clearRect(0,0,w,h); ctx.fillStyle='#1a1a2e'; ctx.fillRect(0,0,w,h);
-      const px=cx,py=h*0.42,pw=w*0.38,ph=h*0.56;
-      ctx.fillStyle='#2c2c3e'; _R(ctx,px-pw/2,py-ph/2,pw,ph,7); ctx.fill();
-      ctx.fillStyle='#f8f8f8'; _R(ctx,px-pw/2+3,py-ph/2+3,pw-6,ph-8,5); ctx.fill();
-      ctx.fillStyle='#e8734a'; ctx.fillRect(px-pw/2+3,py-ph/2+3,pw-6,ph*0.1);
-      ctx.fillStyle='#fff'; ctx.font=`bold ${w*0.045}px sans-serif`; ctx.textAlign='center'; ctx.fillText('🛒 购物车',px,py-ph/2+ph*0.07);
-      const items=[{n:'包包',p:'¥899',c:'#e8734a',d:300},{n:'耳机',p:'¥1299',c:'#4a90d9',d:700},{n:'机械键盘',p:'¥699',c:'#7bc67e',d:1100},{n:'香薰蜡烛',p:'¥299',c:'#f4c542',d:1500}];
-      items.forEach((it,i)=>{ const iy=py-ph/2+ph*0.15+i*ph*0.11;
-        if(tt>it.d){ const st=_easeOutBack(Math.min(1,(tt-it.d)/250));
-        ctx.fillStyle='#fff'; ctx.strokeStyle='#eee'; ctx.lineWidth=1; _R(ctx,px-pw/2+5,iy,pw-10,ph*0.09,3); ctx.fill(); ctx.stroke();
-        ctx.fillStyle=it.c; ctx.beginPath(); ctx.arc(px-pw/2+14,iy+ph*0.045,6,0,Math.PI*2); ctx.fill();
-        ctx.fillStyle='#333'; ctx.font=`${w*0.04}px sans-serif`; ctx.textAlign='left'; ctx.fillText(it.n,px-pw/2+24,iy+ph*0.035);
-        ctx.fillStyle='#e8734a'; ctx.font=`bold ${w*0.04}px sans-serif`; ctx.textAlign='right'; ctx.fillText(it.p,px+pw/2-8,iy+ph*0.035); }
-      });
-      // total price counter
-      if(tt>2200){ const bt=(tt-2200)/600, bs=Math.min(1,bt); const by2=py+ph/2-ph*0.08; ctx.fillStyle=`rgba(255,215,60,${bs*0.35})`; ctx.fillRect(px-pw/2+3,by2,pw-6,ph*0.09); ctx.fillStyle='#fff'; ctx.font=`bold ${w*0.05}px sans-serif`; ctx.textAlign='center'; ctx.fillText(`合计 ¥${Math.floor(bs*3196)}`,px,by2+ph*0.065); }
-      // "下单成功" sparkles
-      if(tt>3000){ for(let i=0;i<5;i++){ const sp=(tt-3000-i*120)/600; if(sp>0&&sp<1){ ctx.fillStyle=`rgba(255,215,60,${0.8*(1-sp)})`; ctx.font=`${w*0.05}px sans-serif`; ctx.fillText('✨',cx+Math.cos(i*1.3)*w*0.2,py+ph*0.35+Math.sin(i*1.3)*8-sp*15); }}}
-      // money flying away
-      if(tt>3200){ for(let i=0;i<4;i++){ const mf=(tt-3200-i*200)/700; if(mf>0&&mf<1){ ctx.fillStyle=`rgba(255,255,255,${0.6*(1-mf)})`; ctx.font=`${w*0.05}px sans-serif`; ctx.textAlign='center'; ctx.fillText('💸',cx-w*0.15+i*w*0.08,py+ph*0.2-mf*20); }}}
-    }
-  },
+	  Q4_B: { duration:3400, drawStatic(ctx,w,h){ this.drawFrame(ctx,w,h,1000); },
+	    drawFrame(ctx,w,h,t){ const tt=t,cx=w/2,cy=h/2;
+	      ctx.clearRect(0,0,w,h);
+	      ctx.fillStyle='#1a1a2e'; ctx.fillRect(0,0,w,h);
+	      ctx.fillStyle='#2c2c3e'; ctx.fillRect(0,h*0.72,w,h*0.28);
+	      const cartX=cx, cartY=h*0.55, cartW=w*0.5, cartH=h*0.32;
+	      ctx.fillStyle='#888'; ctx.beginPath(); ctx.moveTo(cartX-cartW*0.4,cartY-cartH*0.1); ctx.lineTo(cartX+cartW*0.4,cartY-cartH*0.1); ctx.lineTo(cartX+cartW*0.35,cartY+cartH*0.5); ctx.lineTo(cartX-cartW*0.35,cartY+cartH*0.5); ctx.closePath(); ctx.fill();
+	      ctx.strokeStyle='#666'; ctx.lineWidth=2; ctx.stroke();
+	      for(let g=0;g<3;g++){ ctx.strokeStyle='#777'; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(cartX-cartW*0.38+cartW*0.25*g,cartY-cartH*0.08); ctx.lineTo(cartX-cartW*0.33+cartW*0.22*g,cartY+cartH*0.48); ctx.stroke(); }
+	      for(let g=0;g<3;g++){ ctx.strokeStyle='#777'; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(cartX-cartW*0.38,cartY-cartH*0.05+cartH*0.18*g); ctx.lineTo(cartX+cartW*0.38,cartY-cartH*0.05+cartH*0.18*g); ctx.stroke(); }
+	      ctx.strokeStyle='#aaa'; ctx.lineWidth=3; ctx.beginPath(); ctx.moveTo(cartX-cartW*0.4,cartY-cartH*0.1); ctx.lineTo(cartX-cartW*0.4,cartY-cartH*0.35); ctx.stroke();
+	      ctx.strokeStyle='#aaa'; ctx.lineWidth=3; ctx.beginPath(); ctx.moveTo(cartX+cartW*0.4,cartY-cartH*0.1); ctx.lineTo(cartX+cartW*0.4,cartY-cartH*0.35); ctx.stroke();
+	      ctx.fillStyle='#444'; ctx.beginPath(); ctx.arc(cartX-cartW*0.3,cartY+cartH*0.55,w*0.04,0,Math.PI*2); ctx.fill();
+	      ctx.beginPath(); ctx.arc(cartX+cartW*0.3,cartY+cartH*0.55,w*0.04,0,Math.PI*2); ctx.fill();
+	      const fallItems=[{n:'👜',c:'#e8734a',x:-0.2,d:0,s:0.9},{n:'🎧',c:'#4a90d9',x:0.1,d:350,s:1.1},{n:'⌨️',c:'#7bc67e',x:-0.05,d:650,s:1.0},{n:'🕯️',c:'#f4c542',x:0.15,d:900,s:0.95},{n:'💄',c:'#ff6b9d',x:-0.15,d:1150,s:1.05},{n:'📱',c:'#7bc67e',x:0.2,d:1400,s:1.0},{n:'👟',c:'#ff9ecf',x:0,d:1650,s:0.9}];
+	      fallItems.forEach(fi=>{ if(tt>fi.d){ const fp=Math.min(1,(tt-fi.d)/500); const fy=cartY-cartH*0.3+fp*fp*h*0.5; const fx=cartX+fi.x*w*0.35+Math.sin(fp*3)*w*0.05; const frot=Math.sin(fp*8)*0.3; const fsc=1+fp*0.3; ctx.save(); ctx.translate(fx,fy); ctx.rotate(frot); ctx.font=`${w*0.07*fsc}px sans-serif`; ctx.textAlign='center'; ctx.fillText(fi.n,0,0); ctx.restore();
+	        if(fp>0.85){ const sp=Math.min(1,(fp-0.85)/0.15); ctx.fillStyle=`rgba(255,215,60,${sp*0.7})`; ctx.font=`${w*0.03}px sans-serif`; ctx.textAlign='center'; ctx.fillText('💥',fx,fy+w*0.01); }
+	      }});
+	      const buyPulse=Math.sin(tt*0.004)*0.1+0.9;
+	      ctx.fillStyle=`rgba(255,215,60,${buyPulse})`; ctx.font=`bold ${w*0.09}px sans-serif`; ctx.textAlign='center'; ctx.fillText('买买买!',cx,h*0.18);
+	      const itemCount=Math.min(fallItems.length,Math.floor(tt/300));
+	      const totalPrice=[0,899,2198,2897,3196,3495,4694,5893][itemCount];
+	      ctx.fillStyle='rgba(255,255,255,0.15)'; _R(ctx,cx-w*0.25,h*0.80,w*0.5,h*0.07,6); ctx.fill();
+	      ctx.fillStyle='#fff'; ctx.font=`bold ${w*0.05}px sans-serif`; ctx.textAlign='center'; ctx.fillText(`合计 ¥${totalPrice}  (${itemCount}件)`,cx,h*0.85);
+	      for(let sp=0;sp<8;sp++){ const spa=tt*0.003+sp*Math.PI/4; const spx=cartX+Math.cos(spa)*cartW*0.5,spy=cartY+Math.sin(spa)*cartH*0.4; ctx.fillStyle=`rgba(255,215,60,${0.3+Math.sin(tt*0.01+sp)*0.3})`; ctx.font=`${w*0.035}px sans-serif`; ctx.textAlign='center'; ctx.fillText('✨',spx,spy); }
+	      if(tt>2400){ const ap=Math.min(1,(tt-2400)/500); ctx.fillStyle=`rgba(124,198,110,${ap*0.9})`; ctx.font=`bold ${w*0.08}px sans-serif`; ctx.textAlign='center'; ctx.fillText('下单成功! 🎉',cx,h*0.10); }
+	    }
+	  },
   Q4_C: { duration:3500, drawStatic(ctx,w,h){ this.drawFrame(ctx,w,h,500); },
     drawFrame(ctx,w,h,t){ const tt=t%3500,cx=w/2;
       ctx.clearRect(0,0,w,h);
@@ -1402,7 +1406,7 @@ const ANIM = {
       // sun
       ctx.fillStyle='#ffd73c'; ctx.beginPath(); ctx.arc(cx+w*0.3,h*0.12,w*0.08,0,Math.PI*2); ctx.fill();
       // clouds
-      for(let i=0;i<2;i++){ const clX=(tt*0.01+i*0.6)%1.3*w-w*0.2; ctx.fillStyle='rgba(255,255,255,0.7)'; ctx.beginPath(); ctx.arc(clX,h*0.15,8,0,Math.PI*2); ctx.arc(clX+10,h*0.13,10,0,Math.PI*2); ctx.arc(clX+20,h*0.15,7,0,Math.PI*2); ctx.fill(); }
+      for(let i=0;i<2;i++){ const clX=(tt*0.0006+i*0.6)%1.3*w-w*0.2; ctx.fillStyle='rgba(255,255,255,0.7)'; ctx.beginPath(); ctx.arc(clX,h*0.15,8,0,Math.PI*2); ctx.arc(clX+10,h*0.13,10,0,Math.PI*2); ctx.arc(clX+20,h*0.15,7,0,Math.PI*2); ctx.fill(); }
       // walking character
       const charX=cx-w*0.05+Math.sin(tt*0.005)*w*0.18,charY=h*0.38;
       ctx.fillStyle='#5b8cbf'; ctx.beginPath(); ctx.arc(charX,charY,w*0.09,0,Math.PI*2); ctx.fill();
